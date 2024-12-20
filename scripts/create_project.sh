@@ -69,9 +69,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Validate required arguments
-# For now, template and config are not compulsory arguments. Might add validation for them in the future
 validate_arguments() {
     local error=0
+
+    # Note: Template validation will be added once template_utils.sh is implemented
+    # For now, only project type and name are required
 
     # If project type / name is empty
     if [[ -z "$PROJECT_TYPE" ]]; then
@@ -116,7 +118,8 @@ create_project() {
     cd "$project_dir"
 
     # Initialise git repository
-    git init
+    # git init # Commented this out
+    setup_git "$PROJECT_NAME" "$PROJECT_TYPE" # This handles all the git operations
 
     # Apply template based on project type
     case "$PROJECT_TYPE" in
@@ -141,3 +144,9 @@ create_project() {
 # Main execution
 validate_arguments
 create_project
+
+# TODO
+
+# git_utils.sh: Git initialization and configuration (done)
+# file_utils.sh: File and directory operations
+# template_utils.sh: Template processing
