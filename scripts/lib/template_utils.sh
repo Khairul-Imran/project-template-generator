@@ -351,7 +351,6 @@ setup_fullstack_project() {
 setup_project_template() {
     local project_type="$1"
     local project_name="$2"
-    local template="${3:-}" # Optional template parameter -> what is this?
 
     case "$project_type" in
         "frontend")

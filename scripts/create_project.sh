@@ -117,22 +117,15 @@ create_project() {
     mkdir -p "$project_dir"
     cd "$project_dir"
 
-    # Initialise git repository
-    # git init # Commented this out
-    setup_git "$PROJECT_NAME" "$PROJECT_TYPE" # This handles all the git operations
+    # Setup project files (from file_utils.sh)
+    setup_project_files "$PROJECT_TYPE" "$PROJECT_NAME"
 
-    # Apply template based on project type
-    case "$PROJECT_TYPE" in
-        frontend)
-            setup_frontend_project
-            ;;
-        backend)
-            setup_backend_project
-            ;;
-        fullstack)
-            setup_fullstack_project
-            ;;
-    esac
+    # Setup project template (from template_utils.sh)
+    setup_project_template "$PROJECT_TYPE" "$PROJECT_NAME"
+
+    # Setup git (from git_utils.sh)
+    # This has to come after all the files have been created
+    setup_git "$PROJECT_NAME" "$PROJECT_TYPE"
 
     echo "Project created successfully!"
     echo "Next steps:"
@@ -144,12 +137,3 @@ create_project() {
 # Main execution
 validate_arguments
 create_project
-
-# TODO
-
-# git_utils.sh: Git initialization and configuration (done)
-# file_utils.sh: File and directory operations
-# template_utils.sh: Template processing
-
-# Once the util scripts are done, the necessary commands need to be used here too right?
-# Figure out where they should go.
