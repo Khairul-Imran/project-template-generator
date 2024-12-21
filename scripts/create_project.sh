@@ -150,3 +150,6 @@ create_project
 # git_utils.sh: Git initialization and configuration (done)
 # file_utils.sh: File and directory operations
 # template_utils.sh: Template processing
+
+# Once the util scripts are done, the necessary commands need to be used here too right?
+# Figure out where they should go.
