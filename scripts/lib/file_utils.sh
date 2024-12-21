@@ -214,17 +214,88 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 EOF
 
     # Create docs/CONTRIBUTING.md
-    # Stopped here
+    mkdir -p docs
+    cat > "docs/CONTRIBUTING.md" << EOF
+# Contributing to ${project_name^}
 
+## Getting started
+1. Fork the repository
+2. Create a new branch (\`git checkout -b feature/amazing-feature\`)
+3. Commit your changes (\`git commit -m 'Add some amazing feature'\`)
+4. Push to the branch (\`git push origin feature/amazing-feature\`)
+5. Open a Pull Request
 
+## Development Guidelines
+$(case "$project_type" in
+    "frontend")
+        echo "- Follow the existing code style
+- Write meaningful commit messages
+- Update documentation as needed
+- Add appropriate tests"
+        ;;
+    "backend")
+        echo "- Follow Java coding conventions
+- Write meaningful commit messages
+- Include appropriate unit tests
+- Update documentation as needed"
+        ;;
+    "fullstack")
+        echo "### Frontend
+- Follow the existing code style
+- Write meaningful commit messages
+- Update documentation as needed
+- Add appropriate tests
 
+### Backend
+- Follow Java coding conventions
+- Write meaningful commit messages
+- Include appropriate unit tests
+- Update documentation as needed"
+        ;;
+esac)
+EOF
+}
+
+# Copy or create any necessary config files
+setup_config_files() {
+    local project_type="$1"
+
+    echo "Setting up configuration files..."
+
+    # Create config directory if it doesn't exist
+    # Might not need this, as the templates generated might already have generated config files for us
+    # mkdir -p config
+
+    # I need to see how the respective templates are generated first before deciding how these config files could work
+    case "$project_type" in 
+        # For now, not doing anything at the frontend
+        "frontend")
+            ;;
+        # Same for the backend
+        "backend")
+            ;;
+        "fullstack")
+            setup_config_files "frontend"
+            setup_config_files "backend"
+            ;;
+    esac
+}
+
+# Main file setup function that orchestrates all file operations
+setup_project_files() {
+    local project_type="$1"
+    local project_name="$2"
+
+    create_directory_structure "$project_type" "$project_name"
+    create_documentation "$project_type" "$project_name"
+    setup_config_files "$project_type"
+
+    echo "Project files setup completed successfully!!"
 }
 
 
-
-
 # TODO:
-# - Double check the directory structures that you want to create.
+# - Double check the directory structures that you want to create for each type of project.
 
 
 # Comments:
