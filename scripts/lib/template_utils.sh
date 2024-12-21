@@ -3,6 +3,127 @@
 # Set strict error handling
 set -euo pipefail
 
+# Update the frontend README
+update_frontend_readme() {
+    local project_name="$1"
+    local frontend_dir="${project_name}-frontend"
+    
+    echo "Updating frontend README..."
+    
+    cat > "${frontend_dir}/README.md" << EOF
+# ${project_name^} Frontend
+
+## Tech Stack
+- React
+- TypeScript
+- Tailwind CSS
+- Vite
+
+## Getting Started
+
+### Prerequisites
+- Node.js (LTS version)
+- npm
+
+### Installation
+1. Install dependencies
+   \`\`\`bash
+   npm install
+   \`\`\`
+
+### Development
+1. Start the development server
+   \`\`\`bash
+   npm run dev
+   \`\`\`
+   This will start the server at http://localhost:5173
+
+### Building for Production
+1. Create a production build
+   \`\`\`bash
+   npm run build
+   \`\`\`
+   The build output will be in the \`dist\` directory
+
+### Project Structure
+\`\`\`
+src/
+├── assets/        # Static assets
+├── components/    # Reusable components
+├── pages/         # Route components
+├── services/      # API services
+└── types/         # TypeScript type definitions
+\`\`\`
+
+### Available Scripts
+- \`npm run dev\` - Start development server
+- \`npm run build\` - Build for production
+- \`npm run preview\` - Preview production build
+EOF
+}
+
+# Create the backend README
+create_backend_readme() {
+    local project_name="$1"
+    local backend_dir="${project_name}-backend"
+    
+    echo "Creating backend README..."
+    
+    cat > "${backend_dir}/README.md" << EOF
+# ${project_name^} Backend
+
+## Tech Stack
+- Java 17
+- Spring Boot
+- Spring Data JPA
+- Spring Security
+- Maven
+
+## Getting Started
+
+### Prerequisites
+- Java 17 or higher
+- Maven
+
+### Development
+1. Run the application
+   \`\`\`bash
+   ./mvnw spring-boot:run
+   \`\`\`
+   The server will start at http://localhost:8080
+
+### Building for Production
+1. Create a production build
+   \`\`\`bash
+   ./mvnw clean package
+   \`\`\`
+   The build output will be in the \`target\` directory
+
+### Project Structure
+\`\`\`
+src/
+├── main/
+│   ├── java/
+│   │   └── com/example/${backend_dir}/
+│   │       ├── config/      # Configuration classes
+│   │       ├── controller/  # REST controllers
+│   │       ├── model/       # Entity classes
+│   │       ├── repository/  # Data repositories
+│   │       └── service/     # Business logic
+│   └── resources/
+│       └── application.properties  # Application configuration
+├── test/                          # Test files
+└── pom.xml                        # Maven configuration
+\`\`\`
+
+### Available Commands
+- \`./mvnw spring-boot:run\` - Run the application
+- \`./mvnw test\` - Run tests
+- \`./mvnw clean package\` - Create production build
+- \`./mvnw clean install\` - Install dependencies
+EOF
+}
+
 # Setup frontend project using Vite + React + Typescript + Tailwind
 setup_frontend_project() {
     local project_name="$1"
@@ -148,6 +269,9 @@ export default defineConfig({
 });
 EOF
 
+    # Update frontend README
+    update_frontend_readme "$project_name"
+
     # Navigate back to parent directory
     cd ..
 
@@ -201,8 +325,12 @@ dependencies=${deps}" -o "$zip_file"
     # Cleanup
     rm -rf "$temp_dir"
 
+    # Create backend README
+    create_backend_readme "$project_name"
+
     echo "Backend project setup completed successfully!"
 }
+
 
 # Setup fullstack project
 setup_fullstack_project() {
