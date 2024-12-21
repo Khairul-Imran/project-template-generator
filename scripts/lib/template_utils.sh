@@ -292,8 +292,8 @@ setup_backend_project() {
     fi
 
     # Spring Boot project variables
-    local boot_version="3.4.0" # Changed to 3.4.0
-    local java-version="21" # Changed to 21
+    local boot_version="3.4.1" # Changed to 3.4.1
+    local java_version="21" # Changed to 21
     local group_id="com.example"
     local artifact_id="$backend_dir"
     local deps="web,data-jpa,security,validation,lombok,devtools"

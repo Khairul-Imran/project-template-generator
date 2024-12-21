@@ -14,9 +14,11 @@ source "${SCRIPT_DIR}/lib/template_utils.sh"
 
 # Default values
 PROJECT_TYPE=""
-TEMPLATE=""
+# TEMPLATE="" -> not using for now
+# Can add the below to the OPTIONS in the future if using multiple templates
+# -p, --template TEMPLATE  Specific template to use
 PROJECT_NAME=""
-CONFIG_FILE="${SCRIPT_DIR}/config/default_config.yaml"
+CONFIG_FILE="${SCRIPT_DIR}/config/default_config.yaml" # Config files to be worked on soon
 
 # Print usage information
 usage() {
@@ -27,13 +29,12 @@ Generate a new project based on predefined templates.
 
 Options: 
     -t, --type TYPE          Project type (frontend, backend, fullstack)
-    -p, --template TEMPLATE  Specific template to use
     -n, --name NAME         Project name
     -c, --config FILE       Custom configuration file
     -h, --help             Show this help message
 
 Example:
-    $(basename "$0") --type frontend --template react-ts --name my-app
+    $(basename "$0") --type frontend --name my-app
 EOF
 }
 
@@ -44,10 +45,10 @@ while [[ $# -gt 0 ]]; do
             PROJECT_TYPE="$2"
             shift 2
             ;;
-        -p|--template)
-            TEMPLATE="$2"
-            shift 2
-            ;;
+        # -p|--template)
+        #     TEMPLATE="$2"
+        #     shift 2
+        #     ;;
         -n|--name)
             PROJECT_NAME="$2"
             shift 2
@@ -72,7 +73,7 @@ done
 validate_arguments() {
     local error=0
 
-    # Note: Template validation will be added once template_utils.sh is implemented
+    # Note: Template validation can be added in the future if we ever use different templates
     # For now, only project type and name are required
 
     # If project type / name is empty

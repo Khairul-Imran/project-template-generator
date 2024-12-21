@@ -78,16 +78,12 @@ $(case "$project_type" in
         echo "2. Install dependencies
 \`\`\`bash
 npm install
-# or
-yarn install
 \`\`\`"
         ;;
     "backend")
         echo "2. Build the project
 \`\`\`bash
 ./mvnw clean install
-# or
-./gradlew build
 \`\`\`"
         ;;
     "fullstack")
@@ -96,14 +92,10 @@ yarn install
 # Frontend
 cd frontend
 npm install
-# or
-yarn install
 
 # Backend
 cd ../backend
 ./mvnw clean install
-# or
-./gradlew build
 \`\`\`"
         ;;
 esac)
@@ -114,16 +106,12 @@ $(case "$project_type" in
         echo "Run the development server:
 \`\`\`bash
 npm run dev
-# or
-yarn dev
 \`\`\`"
         ;;
     "backend")
         echo "Run the application:
 \`\`\`bash
 ./mvnw spring-boot:run
-# or
-./gradlew bootRun
 \`\`\`"
         ;;
     "fullstack")
@@ -131,16 +119,12 @@ yarn dev
 \`\`\`bash
 cd backend
 ./mvnw spring-boot:run
-# or
-./gradlew bootRun
 \`\`\`
 
 2. In a new terminal, start the frontend development server:
 \`\`\`bash
 cd frontend
 npm run dev
-# or
-yarn dev
 \`\`\`"
         ;;
 esac)
