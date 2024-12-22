@@ -118,6 +118,9 @@ create_project() {
     mkdir -p "$project_dir"
     cd "$project_dir"
 
+    # Get the full path of the project directory
+    local full_path="$(pwd)"
+
     # Setup project files (from file_utils.sh)
     setup_project_files "$PROJECT_TYPE" "$PROJECT_NAME"
 
@@ -128,7 +131,9 @@ create_project() {
     # This has to come after all the files have been created
     setup_git "$PROJECT_NAME" "$PROJECT_TYPE"
 
-    echo "Project created successfully!"
+    echo "✅ Project created successfully!"
+    echo "📁 Project location: $full_path"
+    echo ""
     echo "Next steps:"
     echo "  cd $PROJECT_NAME"
     echo "  git add ."
@@ -142,5 +147,4 @@ create_project
 # TODO:
 
 # create_project.sh
-# - Consider adding a success message that includes the directory path for clarity (not  sure what this means)
 # - Work on the CONFIG_FILE (next step)
