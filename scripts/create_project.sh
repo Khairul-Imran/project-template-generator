@@ -138,3 +138,9 @@ create_project() {
 # Main execution
 validate_arguments
 create_project
+
+# TODO:
+
+# create_project.sh
+# - Consider adding a success message that includes the directory path for clarity (not  sure what this means)
+# - Work on the CONFIG_FILE (next step)

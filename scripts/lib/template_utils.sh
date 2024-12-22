@@ -139,22 +139,43 @@ setup_frontend_project() {
 
     # Create React + Typescript project using Vite
     echo "Creating Vite project..."
-    npm create vite@latest "$frontend_dir" -- --template react-ts
+    # npm create vite@latest "$frontend_dir" -- --template react-ts
+    if ! npm create vite@latest "$frontend_dir" -- --template react-ts; then
+        echo "Error: Failed to create Vite project"
+        exit 1
+    fi
+
 
     # Navigate to frontend directory
-    cd "$frontend_dir"
+    # cd "$frontend_dir"
+    cd "$frontend-dir" || {
+        echo "Error: Failed to navigate to frontend directory"
+        exit 1
+    }
 
     # Install dependencies
     echo "Installing dependencies..."
-    npm install
+    # npm install
+    if ! npm install; then
+        echo "Error: Failed to install dependencies"
+        exit 1
+    fi
 
     # Add Tailwind CSS and its dependencies
     echo "Adding Tailwind CSS..."
-    npm install -D tailwindcss postcss autoprefixer
+    # npm install -D tailwindcss postcss autoprefixer
+    if ! npm install -D tailwindcss postcss autoprefixer; then
+        echo "Error: Failed to install Tailwind CSS and its dependencies"
+        exit 1
+    fi
 
     # Initialise Tailwind CSS
     echo "Initialising Tailwind CSS.."
-    npx tailwindcss init -p
+    # npx tailwindcss init -p
+    if ! npx tailwindcss init -p; then
+        echo "Error: Failed to initialise Tailwind CSS"
+        exit 1
+    fi
 
     # Update tailwind.config.js
     cat > "tailwind.config.js" << EOF
@@ -304,23 +325,32 @@ setup_backend_project() {
 
     # Download the Spring Boot project from Spring Initializr
     echo "Downloading Spring Boot project template..."
-    curl -L "https://start.spring.io/starter.zip?\
-type=maven-project&\
-language=java&\
-bootVersion=${boot_version}&\
-baseDir=${artifact_id}&\
-groupId=${group_id}&\
-artifactId=${artifact_id}&\
-name=${artifact_id}&\
-description=Demo+project+for+Spring+Boot&\
-packageName=${group_id}.${artifact_id}&\
-packaging=jar&\
-javaVersion=${java_version}&\
-dependencies=${deps}" -o "$zip_file"
+    if ! curl -L "https://start.spring.io/starter.zip?\
+    type=maven-project&\
+    language=java&\
+    bootVersion=${boot_version}&\
+    baseDir=${artifact_id}&\
+    groupId=${group_id}&\
+    artifactId=${artifact_id}&\
+    name=${artifact_id}&\
+    description=Demo+project+for+Spring+Boot&\
+    packageName=${group_id}.${artifact_id}&\
+    packaging=jar&\
+    javaVersion=${java_version}&\
+    dependencies=${deps}" -o "$zip_file"; then
+        echo "Error: Failed to download Spring Boot project template"
+        rm -rf "$temp_dir" # Cleanup temp directory
+        exit 1
+    fi
 
     # Unzip the project
     echo "Extracting project files..."
-    unzip -q "$zip_file" -d .
+    # unzip -q "$zip_file" -d .
+    if ! unzip -q "$zip_file" -d .; then
+        echo "Error: Failed to extract project files"
+        rm -rf "$temp_dir" # Cleanup temp directory
+        exit 1
+    fi
 
     # Cleanup
     rm -rf "$temp_dir"
