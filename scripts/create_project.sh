@@ -146,5 +146,39 @@ create_project
 
 # TODO:
 
+# To shift some of the code from the template_utils to their respective templates
+# To ensure the code is cleaner (still considering for this)
+
 # create_project.sh
 # - Work on the CONFIG_FILE (next step)
+
+
+# Next steps
+# For the current project generator, we could work on several enhancements:
+
+# 1. **Testing the Scripts**:
+#    - Create test cases for different project types
+#    - Test error handling scenarios
+#    - Verify all components work together correctly
+
+# 2. **Adding Validation and Safety Features**:
+#    - Check for necessary system requirements before starting (Node.js, Java, Maven versions)
+#    - Validate project names (check for invalid characters)
+#    - Add a backup/rollback mechanism if something fails mid-creation
+
+# 3. **Improve User Experience**:
+#    - Add a verbose mode for detailed logging (`-v` flag)
+#    - Add a dry-run mode to show what would be created (`--dry-run`)
+#    - Add progress indicators for long-running operations
+#    - Add color to console output for better readability
+
+# 4. **Documentation**:
+#    - Create a detailed README for the project generator itself
+#    - Add inline documentation to the scripts
+#    - Create usage examples
+
+# 5. **Additional Features**:
+#    - Add Docker setup for projects
+#    - Add GitHub Actions/CI setup
+#    - Add common testing frameworks setup
+#    - Add database configuration options
