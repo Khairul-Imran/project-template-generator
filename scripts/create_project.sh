@@ -166,7 +166,7 @@ create_project
 #    - Validate project names (check for invalid characters)
 #    - Add a backup/rollback mechanism if something fails mid-creation
 
-# 3. **Improve User Experience**:
+# 3. **Improve User Experience**: (WIP***)
 #    - Add a verbose mode for detailed logging (`-v` flag)
 #    - Add a dry-run mode to show what would be created (`--dry-run`)
 #    - Add progress indicators for long-running operations
