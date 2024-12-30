@@ -101,6 +101,8 @@ log_verbose() {
     fi
 }
 
+# Stopped at line 46
+
 # Example usage in other scripts:
 # source "${SCRIPT_DIR}/lib/logger_utils.sh"
 #
