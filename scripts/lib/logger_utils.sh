@@ -101,4 +101,26 @@ log_verbose() {
     fi
 }
 
-# To clarify some parts of the syntax
+# Example usage in other scripts:
+# source "${SCRIPT_DIR}/lib/logger_utils.sh"
+#
+# # Start a spinner for long operation
+# start_spinner "Installing dependencies..."
+# npm install > /dev/null 2>&1
+# success=$?
+# stop_spinner $success "Dependencies installed successfully!" "Failed to install dependencies"
+#
+# # Log messages
+# log_info "Creating project structure..."
+# log_success "Project created successfully!"
+# log_warning "Git user not configured"
+# log_error "Failed to download template"
+# log_section "Setting up frontend project"
+#
+# # Show progress
+# total=100
+# for i in $(seq 1 $total); do
+#     show_progress $i $total
+#     sleep 0.1
+# done
+# echo # New line after progress bar
