@@ -20,6 +20,7 @@ PROJECT_TYPE=""
 # -p, --template TEMPLATE  Specific template to use
 PROJECT_NAME=""
 VERBOSE=0
+SECONDS=0
 CONFIG_FILE="${SCRIPT_DIR}/config/default_config.yaml" # Config files to be worked on soon
 
 # Print usage information
@@ -46,6 +47,7 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         -t|--type)
             PROJECT_TYPE="$2"
+            log_verbose "Setting project type: $PROJECT_TYPE"
             shift 2
             ;;
         # -p|--template)
@@ -54,10 +56,12 @@ while [[ $# -gt 0 ]]; do
         #     ;;
         -n|--name)
             PROJECT_NAME="$2"
+            log_verbose "Setting project name: $PROJECT_NAME"
             shift 2
             ;;
         -c|--config)
             CONFIG_FILE="$2"
+            log_verbose "Using config file: $CONFIG_FILE"
             shift 2
             ;;
         -v|--verbose)
@@ -83,15 +87,21 @@ validate_arguments() {
     # Note: Template validation can be added in the future if we ever use different templates
     # For now, only project type and name are required
 
+    log_verbose "Validating project arguments..."
+
     # If project type / name is empty
     if [[ -z "$PROJECT_TYPE" ]]; then
         log_error "Project type is required"
         error=1
+    else
+        log_verbose "Project type is valid: $PROJECT_TYPE"
     fi
 
     if [[ -z "$PROJECT_NAME" ]]; then
         log_error "Project name is required"
         error=1
+    else 
+        log_verbose "Project name is valid: $PROJECT_NAME"
     fi
 
     # Validate project type
@@ -146,8 +156,20 @@ create_project() {
     setup_git "$PROJECT_NAME" "$PROJECT_TYPE"
     stop_spinner $? "Git repository initialised successfully!" "Failed to initialise Git repository"
 
+    # Success
     log_section "Project creattion completed! 🎉"
     log_success "Project location: $full_path"
+
+    # Verbose logging of configuration
+    if [[ $VERBOSE -eq 1 ]]; then
+        log_verbose "Project summary:"
+        log_verbose "- Type: $PROJECT_TYPE"
+        log_verbose "- Name: $PROJECT_NAME"
+        log_verbose "- Location: $full_path"
+        log_verbose "- Git initialised: yes"
+        log_verbose "Total time elapsed: $SECONDS seconds"
+    fi
+    
     echo ""
     log_info "Next steps:"
     echo "  cd $PROJECT_NAME"
@@ -157,14 +179,6 @@ create_project() {
 
 # Main execution
 validate_arguments
-
-# Verbose logging of configuration
-if [[ $VERBOSE -eq 1 ]]; then
-    log_verbose "Project type: $PROJECT_TYPE"
-    log_verbose "Project name: $PROJECT_NAME"
-    log_verbose "Config file: $CONFIG_FILE"
-fi
-
 create_project
 
 # TODO:
