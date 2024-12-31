@@ -1,5 +1,7 @@
 #!/bin/bash
 
+declare -g SPINNER_PID  # Declare it as a global variable
+
 # Set strict error handling
 set -euo pipefail
 
@@ -47,13 +49,19 @@ start_spinner() {
     (
         i=0
         while true; do
-            echo -ne "\r${msg}${SPINNER_CHARS[i]}"
-            i=$(( (i + 1) % ${#SPINNER_CHARS[@]} ))
+            echo -ne "\r${msg}${SPINNER_CHARS[i]}" # Print the message, with the current spinner character
+            i=$(( (i + 1) % ${#SPINNER_CHARS[@]} )) # Cycles through the spinners
             sleep 0.1
+            # Breaks down as:
+            # ${#SPINNER_CHARS[@]} - length of SPINNER_CHARS array
+            # (i + 1) % length    - increment i and wrap around using modulo
         done
     ) &
+    # & - Runs the subshell '()' in the background
+    # Allows the main script to continue while the spinner runs
 
     # Store spinner process ID
+    # $! is the process ID of the last background command
     SPINNER_PID=$!
 }
 
@@ -93,15 +101,14 @@ show_progress() {
 }
 
 # Verbose logging (controlled by -v flag)
-VERBOSE=0
+# VERBOSE=0
+# Removing, as it is set in create_project
 
 log_verbose() {
     if [[ $VERBOSE -eq 1 ]]; then
         echo -e "${BLUE}verbose${NC} $1"
     fi
 }
-
-# Stopped at line 46
 
 # Example usage in other scripts:
 # source "${SCRIPT_DIR}/lib/logger_utils.sh"
@@ -126,3 +133,7 @@ log_verbose() {
 #     sleep 0.1
 # done
 # echo # New line after progress bar
+
+
+# TODO:
+# - See which other scripts could these utils be used in

@@ -8,6 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 # Source utility functions
+source "${SCRIPT_DIR}/lib/logger_utils.sh"
 source "${SCRIPT_DIR}/lib/git_utils.sh"
 source "${SCRIPT_DIR}/lib/file_utils.sh"
 source "${SCRIPT_DIR}/lib/template_utils.sh"
@@ -18,6 +19,7 @@ PROJECT_TYPE=""
 # Can add the below to the OPTIONS in the future if using multiple templates
 # -p, --template TEMPLATE  Specific template to use
 PROJECT_NAME=""
+VERBOSE=0
 CONFIG_FILE="${SCRIPT_DIR}/config/default_config.yaml" # Config files to be worked on soon
 
 # Print usage information
@@ -28,10 +30,11 @@ Usage: $(basename "$0") [OPTIONS]
 Generate a new project based on predefined templates.
 
 Options: 
-    -t, --type TYPE          Project type (frontend, backend, fullstack)
+    -t, --type TYPE         Project type (frontend, backend, fullstack)
     -n, --name NAME         Project name
     -c, --config FILE       Custom configuration file
-    -h, --help             Show this help message
+    -v, --verbose           Enable verbose output
+    -h, --help              Show this help message
 
 Example:
     $(basename "$0") --type frontend --name my-app
@@ -57,12 +60,16 @@ while [[ $# -gt 0 ]]; do
             CONFIG_FILE="$2"
             shift 2
             ;;
+        -v|--verbose)
+            VERBOSE=1
+            shift
+            ;;
         -h|--help)
             usage
             exit 0
             ;;
         *)
-            echo "Error: Unknown option $1"
+            log_error "Unknown option $1"
             usage
             exit 1
             ;;
@@ -78,12 +85,12 @@ validate_arguments() {
 
     # If project type / name is empty
     if [[ -z "$PROJECT_TYPE" ]]; then
-        echo "Error: Project type is required"
+        log_error "Project type is required"
         error=1
     fi
 
     if [[ -z "$PROJECT_NAME" ]]; then
-        echo "Error: Project name is required"
+        log_error "Project name is required"
         error=1
     fi
 
@@ -92,7 +99,7 @@ validate_arguments() {
         frontend|backend|fullstack)
             ;;
         *)
-            echo "Error: Invalid project type. Must be one of the following: frontend, backend, fullstack"
+            log_error "Invalid project type. Must be one of the following: frontend, backend, fullstack"
             error=1
             ;;
     esac
@@ -106,35 +113,43 @@ validate_arguments() {
 # Main function to create project
 create_project() {
     local project_dir="$PROJECT_NAME"
+    local full_path
 
-    echo "Creating new $PROJECT_TYPE project: $PROJECT_NAME"
+    log_section "Creating new $PROJECT_TYPE project: $PROJECT_NAME"
 
     # Create project directory
     if [[ -d "$project_dir" ]]; then
-        echo "Error: Directory $project_dir already exists"
+        log_error "Directory $project_dir already exists"
         exit 1
     fi
 
+    log_info "Creating project directory..."
     mkdir -p "$project_dir"
     cd "$project_dir"
-
-    # Get the full path of the project directory
-    local full_path="$(pwd)"
+    full_path="$(pwd)"
+    log_success "Created directory: $full_path"
 
     # Setup project files (from file_utils.sh)
+    log_section "Setting up project files"
+    start_spinner "Creating project structure..."
     setup_project_files "$PROJECT_TYPE" "$PROJECT_NAME"
+    stop_spinner $? "Project structure created successfully!" "Failed to create project structure"
 
     # Setup project template (from template_utils.sh)
+    log_section "Generating project template"
     setup_project_template "$PROJECT_TYPE" "$PROJECT_NAME"
 
     # Setup git (from git_utils.sh)
     # This has to come after all the files have been created
+    log_section "Setting up Git repository"
+    start_spinner "Initialising Git..."
     setup_git "$PROJECT_NAME" "$PROJECT_TYPE"
+    stop_spinner $? "Git repository initialised successfully!" "Failed to initialise Git repository"
 
-    echo "✅ Project created successfully!"
-    echo "📁 Project location: $full_path"
+    log_section "Project creattion completed! 🎉"
+    log_success "Project location: $full_path"
     echo ""
-    echo "Next steps:"
+    log_info "Next steps:"
     echo "  cd $PROJECT_NAME"
     echo "  git add ."
     echo "  git commit -m 'Initial commit'"
@@ -142,6 +157,14 @@ create_project() {
 
 # Main execution
 validate_arguments
+
+# Verbose logging of configuration
+if [[ $VERBOSE -eq 1 ]]; then
+    log_verbose "Project type: $PROJECT_TYPE"
+    log_verbose "Project name: $PROJECT_NAME"
+    log_verbose "Config file: $CONFIG_FILE"
+fi
+
 create_project
 
 # TODO:
