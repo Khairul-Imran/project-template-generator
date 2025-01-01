@@ -8,7 +8,8 @@ create_directory_structure() {
     local project_type="$1"
     local project_name="$2"
 
-    echo "Creating directory structure for $project_type project..."
+    log_info "Creating directory structure for $project_type project..."
+    log_verbose "Creating docs directory..."
 
     # Create docs directory for additional documentation if needed
     mkdir -p docs
@@ -19,7 +20,8 @@ create_documentation() {
     local project_type="$1"
     local project_name="$2"
 
-    echo "Creating documentation files..."
+    log_info "Creating documentation files..."
+    log_verbose "Generating README.md..."
 
     # Create main README.md
     cat > "README.md" << EOF
@@ -186,6 +188,7 @@ git commit --no-verify
 \`\`\`
 EOF
 
+    log_verbose "Generating CONTRIBUTING.md..."
     # Create docs/CONTRIBUTING.md
     mkdir -p docs
     cat > "docs/CONTRIBUTING.md" << EOF
@@ -234,8 +237,9 @@ setup_project_files() {
     local project_type="$1"
     local project_name="$2"
 
+    log_verbose "Starting project files setup..."
     create_directory_structure "$project_type" "$project_name"
     create_documentation "$project_type" "$project_name"
 
-    echo "Project files setup completed successfully!!"
+    log_success "Project files setup completed successfully!!"
 }
