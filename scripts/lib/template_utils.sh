@@ -396,7 +396,7 @@ setup_project_template() {
             setup_fullstack_project "$project_name"
             ;;
         *)
-            echo "Error: Unknown project type $project_type"
+            log_error "Unknown project type $project_type"
             return 1
             ;;
     esac
