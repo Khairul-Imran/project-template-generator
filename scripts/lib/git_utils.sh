@@ -9,7 +9,7 @@ init_git_repo() {
     local git_user_name
     local git_user_email
 
-    echo "Initialising Git repository..."
+    log_info "Initialising Git repository..."
 
     # Initialise repository if not already initialised
     if [[ ! -d ".git" ]]; then
@@ -21,14 +21,14 @@ init_git_repo() {
 
         # Configure git if values are not already set
         if [[ -z "$git_user_name" ]]; then
-            echo "Warning: Git user.name not set. Please configure it manually."
+            log_warning "Git user.name not set. Please configure it manually."
         fi
 
         if [[ -z "$git_user_email" ]]; then
-            echo "Warning: Git user.email not set. Please configure it manually."
+            log_warning "Git user.email not set. Please configure it manually."
         fi
     else
-        echo "Git repository already initialised"
+        log_warning "Git repository already initialised"
     fi
 }
 
@@ -39,11 +39,11 @@ create_gitignore() {
 
     # Only create the .gitignore file if it doesn't exist
     if [[ -f "$gitignore_file" ]]; then
-        echo "Using existing .gitignore file"
+        log_info "Using existing .gitignore file"
         return
     fi
 
-    echo "Creating root .gitignore file..."
+    log_info "Creating root .gitignore file..."
 
     # Only include common/root-level ignores
     cat > "$gitignore_file" << EOF
@@ -71,14 +71,14 @@ EOF
 create_initial_commit() {
     local project_name="$1"
 
-    echo "Creating initial commit..."
+    log_info "Creating initial commit..."
 
     # Stage all files
     git add .
 
     # Create initial commit
     git commit -m "Initial commit: Setup $project_name project structure" || {
-        echo "Warning: Could not create initial commit. Please configure git user.name and user.email"
+        log_warning "Could not create initial commit. Please configure git user.name and user.email"
         return 1
     }
 }
@@ -88,7 +88,7 @@ create_initial_commit() {
 setup_git_hooks() {
     local hooks_dir=".git/hooks"
 
-    echo "Setting up Git hooks for security checks..."
+    log_info "Setting up Git hooks for security checks..."
 
     # Create pre-commit hook
     cat > "$hooks_dir/pre-commit" << 'EOF'
@@ -163,13 +163,15 @@ EOF
     # Make hooks executable
     chmod +x "$hooks_dir/pre-commit"
 
-    echo "Git security hooks installed successfully"
+    log_success "Git security hooks installed successfully"
 }
 
 # Main git setup function that orchestrates all git-related operations
 setup_git() {
     local project_name="$1"
     local project_type="$2"
+
+    log_verbose "Starting Git setup..."
 
     # Initialise repository
     init_git_repo "$project_name"
@@ -183,5 +185,5 @@ setup_git() {
     # Create initial commit (if git is configured)
     create_initial_commit "$project_name" || true
 
-    echo "Git setup completed successfully!"
+    log_success "Git setup completed successfully!"
 }
