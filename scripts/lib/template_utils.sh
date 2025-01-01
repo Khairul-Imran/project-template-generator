@@ -8,7 +8,7 @@ update_frontend_readme() {
     local project_name="$1"
     local frontend_dir="${project_name}-frontend"
     
-    echo "Updating frontend README..."
+    log_info "Updating frontend README..."
     
     cat > "${frontend_dir}/README.md" << EOF
 # ${project_name^} Frontend
@@ -67,7 +67,7 @@ create_backend_readme() {
     local project_name="$1"
     local backend_dir="${project_name}-backend"
     
-    echo "Creating backend README..."
+    log_info "Creating backend README..."
     
     cat > "${backend_dir}/README.md" << EOF
 # ${project_name^} Backend
@@ -129,19 +129,19 @@ setup_frontend_project() {
     local project_name="$1"
     local frontend_dir="${project_name}-frontend"
 
-    echo "Setting up frontend project with Vite + React + Typescript + Tailwind..."
+    log_section "Setting up frontend project with Vite + React + Typescript + Tailwind..."
 
     # Check if npm is installed
     if ! command -v npm &> /dev/null; then
-        echo "Error: npm is not installed. Please install Node.js and npm first."
+        log_error "npm is not installed. Please install Node.js and npm first."
         exit 1
     fi
 
     # Create React + Typescript project using Vite
-    echo "Creating Vite project..."
+    log_info "Creating Vite project..."
     # npm create vite@latest "$frontend_dir" -- --template react-ts
     if ! npm create vite@latest "$frontend_dir" -- --template react-ts; then
-        echo "Error: Failed to create Vite project"
+        log_error "Failed to create Vite project"
         exit 1
     fi
 
@@ -149,31 +149,33 @@ setup_frontend_project() {
     # Navigate to frontend directory
     # cd "$frontend_dir"
     cd "$frontend-dir" || {
-        echo "Error: Failed to navigate to frontend directory"
+        log_error "Failed to navigate to frontend directory"
         exit 1
     }
 
     # Install dependencies
-    echo "Installing dependencies..."
+    start_spinner "Installing dependencies..."
     # npm install
     if ! npm install; then
-        echo "Error: Failed to install dependencies"
+        log_error "Failed to install dependencies"
         exit 1
     fi
+    stop_spinner $? "Dependencies installed successfully!" "Failed to install dependencies"
 
     # Add Tailwind CSS and its dependencies
-    echo "Adding Tailwind CSS..."
+    start_spinner "Adding Tailwind CSS..."
     # npm install -D tailwindcss postcss autoprefixer
     if ! npm install -D tailwindcss postcss autoprefixer; then
-        echo "Error: Failed to install Tailwind CSS and its dependencies"
+        log_error "Failed to install Tailwind CSS and its dependencies"
         exit 1
     fi
+    stop_spinner $? "Tailwind CSS and its dependencies installed successfully!" "Failed to install Tailwind CSS"
 
     # Initialise Tailwind CSS
-    echo "Initialising Tailwind CSS.."
+    log_info "Initialising Tailwind CSS.."
     # npx tailwindcss init -p
     if ! npx tailwindcss init -p; then
-        echo "Error: Failed to initialise Tailwind CSS"
+        log_error "Failed to initialise Tailwind CSS"
         exit 1
     fi
 
@@ -207,7 +209,7 @@ EOF
 EOF
 
     # Update TypeScript configurations
-    echo "Updating TypeScript configurations..."
+    log_info "Updating TypeScript configurations..."
     
     # Update tsconfig.node.json
     cat > "tsconfig.node.json" << EOF
@@ -296,7 +298,7 @@ EOF
     # Navigate back to parent directory
     cd ..
 
-    echo "Frontend project setup completed successfully!"
+    log_success "Frontend project setup completed successfully!"
 }
 
 # Setup backend project using Spring Boot
@@ -304,11 +306,11 @@ setup_backend_project() {
     local project_name="$1"
     local backend_dir="${project_name}-backend"
 
-    echo "Setting up backend project with Spring Boot..."
+    log_section "Setting up backend project with Spring Boot..."
 
     # Check if curl is installed
     if ! command -v curl &> /dev/null; then
-        echo "Error: curl is not installed. Please install curl first."
+        log_error "Curl is not installed. Please install curl first."
         exit 1
     fi
 
@@ -324,7 +326,7 @@ setup_backend_project() {
     local zip_file="$temp_dir/spring-boot-project.zip"
 
     # Download the Spring Boot project from Spring Initializr
-    echo "Downloading Spring Boot project template..."
+    start_spinner "Downloading Spring Boot project template..."
     if ! curl -L "https://start.spring.io/starter.zip?\
     type=maven-project&\
     language=java&\
@@ -342,12 +344,13 @@ setup_backend_project() {
         rm -rf "$temp_dir" # Cleanup temp directory
         exit 1
     fi
+    stop_spinner $? "Spring Boot project template installed successfully" "Failed to install Spring Boot project template"
 
     # Unzip the project
-    echo "Extracting project files..."
+    log_info "Extracting project files..."
     # unzip -q "$zip_file" -d .
     if ! unzip -q "$zip_file" -d .; then
-        echo "Error: Failed to extract project files"
+        log_error "Failed to extract project files"
         rm -rf "$temp_dir" # Cleanup temp directory
         exit 1
     fi
@@ -358,7 +361,7 @@ setup_backend_project() {
     # Create backend README
     create_backend_readme "$project_name"
 
-    echo "Backend project setup completed successfully!"
+    log_success "Backend project setup completed successfully!"
 }
 
 
@@ -366,7 +369,7 @@ setup_backend_project() {
 setup_fullstack_project() {
     local project_name="$1"
 
-    echo "Setting up fullstack project..."
+    log_info "Setting up fullstack project..."
 
     # Setup backend project first
     setup_backend_project "$project_name"
@@ -374,7 +377,7 @@ setup_fullstack_project() {
     # Setup frontend project
     setup_frontend_project "$project_name"
 
-    echo "Fullstack project setup completed successfully!"
+    log_success "Fullstack project setup completed successfully!"
 }
 
 # Select and setup project based on template
