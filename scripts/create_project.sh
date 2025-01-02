@@ -198,16 +198,13 @@ create_project
 #    - Test error handling scenarios
 #    - Verify all components work together correctly
 
-# 2. **Adding Validation and Safety Features**:
+# 2. **Adding Validation and Safety Features**: (WIP***)
 #    - Check for necessary system requirements before starting (Node.js, Java, Maven versions)
 #    - Validate project names (check for invalid characters)
 #    - Add a backup/rollback mechanism if something fails mid-creation
 
 # 3. **Improve User Experience**: (WIP***)
-#    - Add a verbose mode for detailed logging (`-v` flag)
 #    - Add a dry-run mode to show what would be created (`--dry-run`)
-#    - Add progress indicators for long-running operations
-#    - Add color to console output for better readability
 
 # 4. **Documentation**:
 #    - Create a detailed README for the project generator itself

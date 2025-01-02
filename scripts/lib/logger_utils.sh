@@ -133,7 +133,3 @@ log_verbose() {
 #     sleep 0.1
 # done
 # echo # New line after progress bar
-
-
-# TODO:
-# - See which other scripts could these utils be used in
