@@ -4,13 +4,12 @@
 set -euo pipefail
 
 # Required versions
-# To decide on the versions later
+# To decide on the versions later *****
 readonly REQUIRED_NODE_VERSION=""
 readonly REQUIRED_JAVA_VERSION=""
 readonly REQUIRED_MVN_VERSION=""
 
 # Validate Node.js version
-# Stopped here
 validate_node() {
     log_verbose "Checking Node.js installation..."
 
@@ -24,7 +23,7 @@ validate_node() {
     log_verbose "Found Node.js version: $current_version"
 
     if ! verify_version "$current_version" "$REQUIRED_NODE_VERSION"; then
-        log_error "Node.js version $current_version is lower than required version $REQUIRED_NODE_VERSION"
+        log_error "Node.js version $current_version is lower than the required version $REQUIRED_NODE_VERSION"
         return 1
     fi
 
@@ -33,9 +32,31 @@ validate_node() {
 }
 
 # Validate Java version
+validate_java() {
+    log_verbose "Checking Java installation..."
 
+    if ! command -v java &> /dev/null; then
+        log_error "Java is not installed"
+        log_info "Please install Java version $REQUIRED_JAVA_VERSION or higher"
+        return 1
+    fi
+
+    local current_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | cut -d'.' -f1)
+    log_verbose "Found Java version: $current_version"
+
+    if [[ "$current_version" -lt "$REQUIRED_JAVA_VERSION" ]]; then
+        log_error "Java version $current_version is lower than the required version $REQUIRED_JAVA_VERSION"
+        return 1
+    fi
+
+    log_verbose "Java version check passed"
+    return 0
+}
 
 # Validate Maven version
+validate_maven() {
+    # Continue here
+}
 
 
 # Helper function to compare versions
