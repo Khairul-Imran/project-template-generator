@@ -78,7 +78,21 @@ validate_maven() {
 
 # Helper function to compare versions
 verify_version() {
-    
+    local current=$1
+    local required=$2
+
+    # Clarify
+    local current_parts=(${current//./ })
+    local required_parts=(${required//./ })
+
+    for ((i=0; i<${#required_parts[@]}; i++)); do
+        if [[ ${current_parts[i]:-0} -lt ${required_parts[i]:-0} ]]; then
+            return 1
+        elif [[ ${current_parts[i]:-0} -gt ${required_parts[i]:-0} ]]; then
+            return 0
+        fi
+    done
+    return 0
 }
 
 
