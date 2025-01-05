@@ -97,7 +97,44 @@ verify_version() {
 
 
 # Validate project name
+# To clarify
+validate_project_name() {
+    local project_name="$1"
+    local error=0
 
+    log_verbose "Validating project name: $project_name"
+
+    # Check length
+    if [[ ${#project_name} -lt 3 || ${#project_name} -gt 50 ]]; then
+        log_error "Project name must be between 3 and 50 characters long"
+        error=1
+    fi
+
+    # Check for invalid characters
+    if [[ ! $project_name =~ ^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$ ]]; then
+        log_error "Project name must:"
+        echo " - Start with a letter"
+        echo " - Contain only letters, number, and hyphens"
+        echo " - End with a letter or number"
+        error=1
+    fi
+
+    # Check for  reserved names
+    local reserved_names=("node_modules" "build" "dist" "test" "src" "app" "config" "public")
+    for reserved in "${reserved_names[@]}"; do
+        if [[ "${project_name,,}" == "$reserved" ]]; then
+            log_error "Project name cannot be a reserved name: $reserved"
+            error=1
+        fi
+    done
+
+    if [[ $error -eq 1 ]]; then
+        return 1
+    fi
+
+    log_verbose "Project name validation passed"
+    return 0
+}
 
 # Backup functionality
 
