@@ -136,10 +136,13 @@ validate_project_name() {
 }
 
 # Backup functionality
-# Is this function really necessary?
 create_backup() {
     local project_dir="$1"
-    local backup_dir="${project_dir}.bak" # What is this .bak?
+    local backup_dir="${project_dir}.bak"
+
+    # .bak is a common file extension convention used to indicate that something is a backup file. 
+    # It's not special to the system - it's just a naming convention that developers often use.
+    # Used to distinguish the backup from the original while keeping the name similar enough to identify what it's a backup of.
 
     log_verbose "Creating backup of $project_dir"
 
@@ -155,7 +158,23 @@ create_backup() {
 
 # Rollback functionality
 rollback() {
-    
+    local project_dir="$1"
+    local backup_dir="${project_dir}.bak"
+
+    log_warning "Rolling back changes..."
+
+    if [[ -d "$backup_dir" ]]; then
+        # Remove failed project directory
+        rm -rf "project_dir"
+
+        # Restore from backup
+        mv "$backup_dir" "$project_dir"
+        log_success "Rollback completed successfully"
+    else
+        # If no backup exists, just remove the project directory
+        rm -rf "$project_dir"
+        log_success "Cleaned up project directory"
+    fi
 }
 
 
