@@ -97,7 +97,6 @@ verify_version() {
 
 
 # Validate project name
-# To clarify
 validate_project_name() {
     local project_name="$1"
     local error=0
@@ -137,9 +136,27 @@ validate_project_name() {
 }
 
 # Backup functionality
+# Is this function really necessary?
+create_backup() {
+    local project_dir="$1"
+    local backup_dir="${project_dir}.bak" # What is this .bak?
 
+    log_verbose "Creating backup of $project_dir"
+
+    if [[ -d "$project_dir" ]]; then
+        if ! cp -r "$project_dir" "$backup_dir"; then
+            log_error "Failed to create backup"
+            return 1
+        fi
+        log_verbose "Backup created at $backup_dir"
+    fi
+    return 0
+}
 
 # Rollback functionality
+rollback() {
+    
+}
 
 
 # Main validation function
