@@ -150,6 +150,7 @@ create_project() {
 
     # New 
     # Wrapping the entire project creation process in a trap for cleanup on failure
+    # TODO: To clarify the trap usage here
     trap 'rollback "$project_dir"' ERR
 
     log_info "Creating project directory..."
@@ -177,6 +178,7 @@ create_project() {
 
     # New
     # Remove trap if everything succeeded
+    # TODO: Here too
     trap - ERR
 
     # Success
@@ -216,18 +218,15 @@ create_project
 # Next steps
 # For the current project generator, we could work on several enhancements:
 
-# 1. **Testing the Scripts**:
+# 1. **Testing the Scripts**: (TODO next)
 #    - Create test cases for different project types
 #    - Test error handling scenarios
 #    - Verify all components work together correctly
 
-# 2. **Adding Validation and Safety Features**: (WIP***)
-#    - Check for necessary system requirements before starting (Node.js, Java, Maven versions)
-#    - Validate project names (check for invalid characters)
-#    - Add a backup/rollback mechanism if something fails mid-creation
+# 2. **Adding Validation and Safety Features**: (WIP***) -> Mostly done. To clarify some small parts
 
 # 3. **Improve User Experience**: (WIP***)
-#    - Add a dry-run mode to show what would be created (`--dry-run`)
+#    - Add a dry-run mode to show what would be created (`--dry-run`) - TODO
 
 # 4. **Documentation**:
 #    - Create a detailed README for the project generator itself
