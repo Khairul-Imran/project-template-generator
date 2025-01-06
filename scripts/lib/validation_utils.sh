@@ -179,3 +179,50 @@ rollback() {
 
 
 # Main validation function
+validate_requirements() {
+    local project_type="$1"
+    local project_name="$2"
+    local error=0
+
+    log_section "Validating requirements"
+
+    # Validate project name
+    if !validate_project_name "$project_name"; then
+        error=1
+    fi
+
+    # Validate required tools based on project type
+    case "$project_type" in 
+        "frontend")
+            if ! validate_node; then
+                error=1
+            fi
+            ;;
+        "backend")
+            if ! validate_java; then
+                error=1
+            fi
+            if ! validate_maven; then
+                error=1
+            fi
+            ;;
+        "fullstack")
+            if ! validate_node; then
+                error=1
+            fi
+            if ! validate_java; then
+                error=1
+            fi
+            if ! validate_maven; then
+                error=1
+            fi            
+            ;;
+    esac
+
+    if [[ $error -eq 1 ]]; then
+        return 1
+    fi
+
+    log_success "All requirements validated successfully"
+    return 0
+}
