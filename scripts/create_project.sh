@@ -12,6 +12,7 @@ source "${SCRIPT_DIR}/lib/logger_utils.sh"
 source "${SCRIPT_DIR}/lib/git_utils.sh"
 source "${SCRIPT_DIR}/lib/file_utils.sh"
 source "${SCRIPT_DIR}/lib/template_utils.sh"
+source "${SCRIPT_DIR}/lib/validation_utils.sh"
 
 # Default values
 PROJECT_TYPE=""
@@ -125,6 +126,13 @@ create_project() {
     local project_dir="$PROJECT_NAME"
     local full_path
 
+    # New
+    # Validate all requirements before starting
+    if ! validate_requirements "$PROJECT_TYPE" "$PROJECT_NAME"; then
+        log_error "Requirements validation failed"
+        exit 1
+    fi
+
     log_section "Creating new $PROJECT_TYPE project: $PROJECT_NAME"
 
     # Create project directory
@@ -132,6 +140,17 @@ create_project() {
         log_error "Directory $project_dir already exists"
         exit 1
     fi
+
+    # New
+    # Create backup directory
+    create_backup "$project_dir" || {
+        log_error "Failed to create backup"
+        exit 1
+    }
+
+    # New 
+    # Wrapping the entire project creation process in a trap for cleanup on failure
+    trap 'rollback "$project_dir"' ERR
 
     log_info "Creating project directory..."
     mkdir -p "$project_dir"
@@ -155,6 +174,10 @@ create_project() {
     start_spinner "Initialising Git..."
     setup_git "$PROJECT_NAME" "$PROJECT_TYPE"
     stop_spinner $? "Git repository initialised successfully!" "Failed to initialise Git repository"
+
+    # New
+    # Remove trap if everything succeeded
+    trap - ERR
 
     # Success
     log_section "Project creattion completed! 🎉"
