@@ -165,7 +165,7 @@ rollback() {
 
     if [[ -d "$backup_dir" ]]; then
         # Remove failed project directory
-        rm -rf "project_dir"
+        rm -rf "$project_dir"
 
         # Restore from backup
         mv "$backup_dir" "$project_dir"

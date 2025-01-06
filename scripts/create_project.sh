@@ -151,7 +151,8 @@ create_project() {
     # New 
     # Wrapping the entire project creation process in a trap for cleanup on failure
     # TODO: To clarify the trap usage here
-    trap 'rollback "$project_dir"' ERR
+    # trap 'rollback "$project_dir"' ERR
+    trap 'rollback "$project_dir"; exit 1' ERR # To compare the difference, and decide which to use
 
     log_info "Creating project directory..."
     mkdir -p "$project_dir"
@@ -177,8 +178,7 @@ create_project() {
     stop_spinner $? "Git repository initialised successfully!" "Failed to initialise Git repository"
 
     # New
-    # Remove trap if everything succeeded
-    # TODO: Here too
+    # Remove trap if everything above succeeded
     trap - ERR
 
     # Success
