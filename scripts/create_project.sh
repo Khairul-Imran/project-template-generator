@@ -150,9 +150,11 @@ create_project() {
 
     # New 
     # Wrapping the entire project creation process in a trap for cleanup on failure
-    # TODO: To clarify the trap usage here
-    # trap 'rollback "$project_dir"' ERR
-    trap 'rollback "$project_dir"; exit 1' ERR # To compare the difference, and decide which to use
+    # trap 'rollback "$project_dir"' ERR 
+    # -> Changed this to ensure the script exits with an error status when something fails
+    # -> Prevents the script from continuing execution after a rollback
+    # -> Makes it clear to users that something went wrong (through the exit status)
+    trap 'rollback "$project_dir"; exit 1' ERR 
 
     log_info "Creating project directory..."
     mkdir -p "$project_dir"
@@ -182,7 +184,7 @@ create_project() {
     trap - ERR
 
     # Success
-    log_section "Project creattion completed! 🎉"
+    log_section "Project creation completed! 🎉"
     log_success "Project location: $full_path"
 
     # Verbose logging of configuration
@@ -224,6 +226,7 @@ create_project
 #    - Verify all components work together correctly
 
 # 2. **Adding Validation and Safety Features**: (WIP***) -> Mostly done. To clarify some small parts
+#    - TODO: See how we can test these validation functions (Do this next)
 
 # 3. **Improve User Experience**: (WIP***)
 #    - Add a dry-run mode to show what would be created (`--dry-run`) - TODO
