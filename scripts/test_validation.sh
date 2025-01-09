@@ -154,7 +154,7 @@ test_backup_rollback() {
 main() {
     log_section "Starting validation tests"
 
-    
+    b
 }
 
 # Run tests
