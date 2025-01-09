@@ -95,12 +95,39 @@ test_version_comparison() {
 
 # Test system requirements validation
 test_system_requirements() {
-    
+    log_section "Testing system requirements validation"
+
+    # Test Node.js validation
+    if command -v node &> /dev/null; then
+        run_test "Node.js installation" \
+            "validate_node" 0
+    else
+        run_test "Missing Node.js" \
+            "validate_node" 1
+    fi
+
+    # Test Java validation
+    if command -v java &> /dev/null; then
+        run_test "Java installation" \
+            "validate_java" 0
+    else
+        run_test "Missing Java" \
+            "validate_java" 1
+    fi
+
+    # Test Maven validation
+    if command -v mvn &> /dev/null; then
+        run_test "Maven installation" \
+            "validate_maven" 0
+    else
+        run_test "Missing Maven" \
+            "validate_maven" 1
+    fi
 }
 
 # Test backup and rollback
 test_backup_rollback() {
-
+    
 }
 
 # Run all tests
