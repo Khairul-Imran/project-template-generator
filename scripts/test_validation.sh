@@ -127,12 +127,34 @@ test_system_requirements() {
 
 # Test backup and rollback
 test_backup_rollback() {
-    
+    log_section "Testing backup and rollback"
+
+    # Create test directory
+    local test_dir="test-project"
+    mkdir -p "$test_dir"
+
+    # Test backup creation
+    run_test "Backup creation" \
+        "create_backup '$test_dir'" 0
+
+    # Verify that backup exists
+    run_test "Backup exists" \
+        "test -d '${test_dir}.bak'" 0
+
+    # Test rollback
+    run_test "Rollback functionality" \
+        "rollback '$test_dir'" 0
+
+    # Clean up
+    # Clarify ****
+    rm -rf "${test_dir}" "${test_dir}.bak" 2>/dev/null || true
 }
 
 # Run all tests
 main() {
+    log_section "Starting validation tests"
 
+    
 }
 
 # Run tests
