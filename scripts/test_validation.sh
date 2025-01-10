@@ -24,7 +24,7 @@ run_test() {
 
     ((TESTS_TOTAL++))
 
-    echo -n "Testing $test_name..."
+    echo -n "Testing $test_name... "
 
     if eval "$test_command" > /dev/null 2>&1; then
         # eval -> Executes the command string passed to the function

@@ -112,9 +112,9 @@ validate_project_name() {
     # Check for invalid characters
     if [[ ! $project_name =~ ^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$ ]]; then
         log_error "Project name must:"
-        echo " - Start with a letter"
-        echo " - Contain only letters, number, and hyphens"
-        echo " - End with a letter or number"
+        echo "  - Start with a letter"
+        echo "  - Contain only letters, numbers, and hyphens"
+        echo "  - End with a letter or number"
         error=1
     fi
 
@@ -187,7 +187,7 @@ validate_requirements() {
     log_section "Validating requirements"
 
     # Validate project name
-    if !validate_project_name "$project_name"; then
+    if ! validate_project_name "$project_name"; then
         error=1
     fi
 
@@ -226,6 +226,3 @@ validate_requirements() {
     log_success "All requirements validated successfully"
     return 0
 }
-
-
-# TODO: Double check that all the syntax is correct ***
