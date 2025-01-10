@@ -27,9 +27,12 @@ run_test() {
     echo -n "Testing $test_name..."
 
     if eval "$test_command" > /dev/null 2>&1; then
-        local actual_result=0
+        # eval -> Executes the command string passed to the function
+        # > /dev/null -> redirects standard output to /dev/null (discards it)
+        # 2>&1 -> redirects standard error to the same place as standard output
+        local actual_result=0 # If command succeeds (exit code 0)
     else
-        local actual_result=1
+        local actual_result=1 # If command fails (exit code non-zero)
     fi
 
     if [[ $actual_result -eq $expected_result ]]; then
@@ -146,16 +149,30 @@ test_backup_rollback() {
         "rollback '$test_dir'" 0
 
     # Clean up
-    # Clarify ****
     rm -rf "${test_dir}" "${test_dir}.bak" 2>/dev/null || true
+    # Only redirects stderr to /dev/null, stdout would still show if there was any
 }
 
 # Run all tests
 main() {
     log_section "Starting validation tests"
 
-    
+    test_project_name_validation
+    test_version_comparison
+    test_system_requirements
+    test_backup_rollback
+
+    # Print test summary
+    log_section "Test Summary"
+    echo "Total tests: $TESTS_TOTAL"
+    echo "Passed: $TESTS_PASSED"
+    echo "Failed: $TESTS_FAILED"
+
+    # Exit with failure if any tests failed
+    [[ $TESTS_FAILED -eq 0 ]] || exit 1
 }
 
 # Run tests
 main
+
+# TODO: to test this script
