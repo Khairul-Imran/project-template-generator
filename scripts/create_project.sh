@@ -225,8 +225,7 @@ create_project
 #    - Test error handling scenarios
 #    - Verify all components work together correctly
 
-# 2. **Adding Validation and Safety Features**: (WIP***) -> Mostly done. To clarify some small parts
-#    - TODO: See how we can test these validation functions (Do this next)
+# 2. **Adding Validation and Safety Features**: DONE
 
 # 3. **Improve User Experience**: (WIP***)
 #    - Add a dry-run mode to show what would be created (`--dry-run`) - TODO

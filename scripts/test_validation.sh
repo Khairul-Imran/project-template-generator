@@ -149,8 +149,20 @@ test_backup_rollback() {
         "rollback '$test_dir'" 0
 
     # Clean up
-    rm -rf "${test_dir}" "${test_dir}.bak" 2>/dev/null || true
-    # Only redirects stderr to /dev/null, stdout would still show if there was any
+    # Double-check variables aren't empty
+    if [[ -n "$test_dir" ]]; then
+
+        # Add check if directories exist before listing/removing
+        if [[ -d "$test_dir" ]]; then
+            echo "Contents of test directory before cleanup:"
+            ls -la "$test_dir"
+        fi
+
+        echo "Performing cleanup..."
+        # Only redirects stderr to /dev/null, stdout would still show if there was any
+        rm -rfv "${test_dir}" "${test_dir}.bak" 2>/dev/null || true
+        echo "Cleanup completed"
+    fi
 }
 
 # Run all tests
