@@ -335,6 +335,8 @@ create_project
 
 # 3. **Improve User Experience**: (Done)
 #    - Add a dry-run mode to show what would be created (`--dry-run`) - To review the preview, to ensure it is representative of what is going to be created
+#    - Example usage:
+#    - ./create_project.sh --type fullstack --name my-app --dry-run
 
 # 4. **Documentation**:
 #    - Create a detailed README for the project generator itself
