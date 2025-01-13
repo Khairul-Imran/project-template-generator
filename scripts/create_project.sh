@@ -23,6 +23,7 @@ PROJECT_NAME=""
 VERBOSE=0
 SECONDS=0
 CONFIG_FILE="${SCRIPT_DIR}/config/default_config.yaml" # Config files to be worked on soon
+DRY_RUN=0
 
 # Print usage information
 usage() {
@@ -36,6 +37,7 @@ Options:
     -n, --name NAME         Project name
     -c, --config FILE       Custom configuration file
     -v, --verbose           Enable verbose output
+    -d, --dry-run           Show what would be created without making any changes
     -h, --help              Show this help message
 
 Example:
@@ -67,6 +69,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -v|--verbose)
             VERBOSE=1
+            shift
+            ;;
+        -d|--dry-run)
+            DRY_RUN=1
             shift
             ;;
         -h|--help)
@@ -121,10 +127,110 @@ validate_arguments() {
     fi
 }
 
+# Dry run
+show_preview() {
+    local project_type="$1"
+    local project_name="$2"
+
+    log_section "Preview: Project Structure"
+    echo "Project Type: $project_type"
+    echo "Project Name: $project_name"
+    echo ""
+
+    echo "The following will be created:"
+    echo "└── $project_name/"
+
+    case "$project_type" in
+        "frontend")
+            echo "    ├── ${project_name}-frontend/    # Frontend application"
+            echo "    │   ├── src/                     # Source files"
+            echo "    │   │   ├── assets/              # Static assets"
+            echo "    │   │   ├── components/          # React components"
+            echo "    │   │   ├── pages/               # Route components"
+            echo "    │   │   ├── services/            # API services"
+            echo "    │   │   └── types/               # TypeScript definitions"
+            echo "    │   ├── public/                  # Public assets"
+            echo "    │   ├── index.html               # Entry point"
+            echo "    │   ├── package.json             # Dependencies"
+            echo "    │   ├── tsconfig.json            # TypeScript config"
+            echo "    │   ├── vite.config.ts           # Vite config"
+            echo "    │   └── tailwind.config.js       # Tailwind config"
+            ;;
+        "backend")
+            echo "    ├── ${project_name}-backend/     # Backend application"
+            echo "    │   ├── src/"
+            echo "    │   │   ├── main/"
+            echo "    │   │   │   ├── java/            # Java source files"
+            echo "    │   │   │   └── resources/       # Application resources"
+            echo "    │   │   └── test/                # Test files"
+            echo "    │   ├── pom.xml                  # Maven configuration"
+            echo "    │   └── README.md                # Backend documentation"
+            ;;
+        "fullstack")
+            echo "    ├── ${project_name}-frontend/    # Frontend application"
+            echo "    │   ├── src/"
+            echo "    │   │   ├── assets/"
+            echo "    │   │   ├── components/"
+            echo "    │   │   ├── pages/"
+            echo "    │   │   ├── services/"
+            echo "    │   │   └── types/"
+            echo "    │   └── [Frontend configuration files]"
+            echo "    │"
+            echo "    ├── ${project_name}-backend/     # Backend application"
+            echo "    │   ├── src/"
+            echo "    │   │   ├── main/"
+            echo "    │   │   └── test/"
+            echo "    │   └── [Backend configuration files]"
+            ;;
+    esac
+
+    echo "    │"
+    echo "    ├── docs/                    # Documentation"
+    echo "    │   └── CONTRIBUTING.md      # Contribution guidelines"
+    echo "    │"
+    echo "    ├── .gitignore               # Git ignore rules"
+    echo "    └── README.md                # Project documentation"
+
+    echo ""
+    log_section "Preview: Git Configuration"
+    echo "✓ Git repository will be initialized"
+    echo "✓ Git hooks will be set up (including security checks)"
+    echo "✓ Initial commit will be created"
+
+    echo ""
+    log_section "Preview: Additional Setup"
+    case "$project_type" in
+        "frontend"|"fullstack")
+            echo "✓ Node.js dependencies will be installed"
+            echo "✓ Tailwind CSS will be configured"
+            echo "✓ TypeScript will be configured"
+            echo "✓ Vite development server will be configured"
+            ;;
+    esac
+
+    case "$project_type" in
+        "backend"|"fullstack")
+            echo "✓ Spring Boot will be configured"
+            echo "✓ Maven will be configured"
+            echo "✓ Application properties will be set up"
+            ;;
+    esac
+    
+    echo ""
+    log_warning "This is a dry run - no files will be created"
+}
+
 # Main function to create project
 create_project() {
     local project_dir="$PROJECT_NAME"
     local full_path
+
+    # New
+    # If dry run selected, show preview and exit
+    if [[ $DRY_RUN -eq 1 ]]; then
+        show_preview "$PROJECT_TYPE" "$PROJECT_NAME"
+        exit 0
+    fi
 
     # New
     # Validate all requirements before starting
@@ -225,10 +331,10 @@ create_project
 #    - Test error handling scenarios
 #    - Verify all components work together correctly
 
-# 2. **Adding Validation and Safety Features**: DONE
+# 2. **Adding Validation and Safety Features**: (Done)
 
-# 3. **Improve User Experience**: (WIP***)
-#    - Add a dry-run mode to show what would be created (`--dry-run`) - TODO
+# 3. **Improve User Experience**: (Done)
+#    - Add a dry-run mode to show what would be created (`--dry-run`) - To review the preview, to ensure it is representative of what is going to be created
 
 # 4. **Documentation**:
 #    - Create a detailed README for the project generator itself
