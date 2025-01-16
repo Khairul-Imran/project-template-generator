@@ -77,6 +77,17 @@ verify_directory_structure() {
     done
 
     # Project-specific checks
-    
+    # TODO
+    case "$project_type" in
+        "frontend")
+            ;;
+        "backend")
+            ;;
+        "fullstack")
+            ;;
+    esac
 
+    return $error
 }
+
+# Test frontend project creation
