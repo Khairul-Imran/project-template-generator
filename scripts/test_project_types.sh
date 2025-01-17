@@ -80,10 +80,57 @@ verify_directory_structure() {
     # TODO
     case "$project_type" in
         "frontend")
+            local frontend_dir="$project_dir/${project_dir}-frontend"
+            if [[ ! -d "$frontend_dir" ]]; then
+                log_error "Missing frontend directory"
+                error=1
+            else
+                # Check frontend-specific files
+                # TODO: Double check this
+                local frontend_files=(
+                    "package.json"
+                    "tsconfig.json"
+                    "tsconfig.node.json"
+                    "tsconfig.app.json"
+                    "vite.config.ts"
+                    "tailwind.config.js"
+                    "src/index.css"
+                )
+                for file in "${frontend_files[@]}"; do
+                    if [[ ! -f "$frontend_dir/$file" ]]; then
+                        log_error "Missing frontend file: $file"
+                        error=1
+                    fi
+                done
+            fi
             ;;
+
         "backend")
+            local backend_dir="$project_dir/${project_dir}-backend"
+            if [[ ! -d "$backend_dir" ]]; then
+                log_error "Missing backend directory"
+                error=1
+            else
+                # Check backend-specific files
+                # TODO: Double check this
+                local backend_files=(
+                    "pom.xml"
+                    "mvnw"
+                    "mvnw.cmd"
+                )
+                for file in "${backend_files[@]}"; do
+                    if [[ ! -f "$backend_dir/$file" ]]; then
+                        log_error "Missing backend file: $file"
+                        error=1
+                    fi
+                done
+            fi
             ;;
+
         "fullstack")
+            # Check both frontend and backend
+            verify_directory_structure "$project_dir" "frontend"
+            verify_directory_structure "$project_dir" "backend"
             ;;
     esac
 
