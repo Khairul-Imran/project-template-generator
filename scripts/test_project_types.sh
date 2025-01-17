@@ -138,3 +138,69 @@ verify_directory_structure() {
 }
 
 # Test frontend project creation
+test_frontend_project() {
+    log_section "Testing frontend project creation"
+
+    local project_name="test-frontend-project"
+    cd "$TEST_DIR"
+
+    # Create frontend project
+    run_test "Frontend project creation" \
+        "${SCRIPT_DIR}/create_project.sh -t frontend -n $project_name" 0
+
+    # Verify structure
+    run_test "Frontend project structure" \
+        "verify_directory_structure '$project_name' 'frontend'" 0
+
+    # Clean up
+    rm -rf "$project_name"
+}
+
+# Test backend project creation
+test_backend_project() {
+    log_section "Testing backend project creation"
+
+    local project_name="test-backend-project"
+    cd "$TEST_DIR"
+
+    # Create backend project
+    run_test "Backend project creation" \
+        "${SCRIPT_DIR}/create_project.sh -t backend -n $project_name" 0
+
+    # Verify structure
+    run_test "Backend project structure" \
+        "verify_directory_structure '$project_name' 'backend'" 0
+
+    # Clean up
+    rm -rf "$project_name"
+}
+
+# Test fullstack project creation
+test_fullstack_project() {
+    log_section "Testing fullstack project creation"
+    
+    local project_name="test-fullstack-project"
+    cd "$TEST_DIR"
+
+    # Create fullstack project
+    run_test "Fullstack project creation" \
+        "${SCRIPT_DIR}/create_project.sh -t fullstack -n $project_name" 0
+
+    # Verify structure
+    run_test "Fullstack project structure" \
+        "verify_directory_structure '$project_name' 'fullstack'" 0
+
+    # Clean up
+    rm -rf "$project_name"
+}
+
+# Cleanup function
+cleanup() {
+    log_verbose "Cleaning up test directory..."
+    rm -rf "$TEST_DIR"
+}
+
+# Run all tests
+main() {
+    
+}
