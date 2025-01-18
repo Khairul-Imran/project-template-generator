@@ -202,15 +202,27 @@ cleanup() {
 
 # Run all tests
 main() {
-    log_section "Starting project type tests"
+    local test_type="$1"
+    log_section "Starting project type test for: $test_type"
 
     # Set up trap for cleanup
     trap cleanup EXIT
 
-    # Shouldn't it be a switch statement here instead, depending on the project type?
-    test_frontend_project
-    test_backend_project
-    test_fullstack_project
+    case "$test_type" in
+        "frontend")
+            test_frontend_project
+            ;;
+        "backend")
+            test_backend_project
+            ;;
+        "fullstack")
+            test_fullstack_project
+            ;;
+        *)
+            log_error "Invalid test type. Must be one of the following: frontend, backend, fullstack"
+            exit 1
+            ;;
+    esac
 
     # Print test summary
     log_section "Test Summary"
@@ -222,5 +234,12 @@ main() {
     [[ $TESTS_FAILED -eq 0 ]] || exit 1
 }
 
+# Updated script usage to accept parameter
+if [[ $# -ne 1 ]]; then
+    echo "Usage: $0 <project-type>"
+    echo "project-type: frontend, backend, or fullstack"
+    exit 1
+fi
+
 # Run tests
-main
+main "$1"
