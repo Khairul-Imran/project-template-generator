@@ -202,5 +202,25 @@ cleanup() {
 
 # Run all tests
 main() {
-    
+    log_section "Starting project type tests"
+
+    # Set up trap for cleanup
+    trap cleanup EXIT
+
+    # Shouldn't it be a switch statement here instead, depending on the project type?
+    test_frontend_project
+    test_backend_project
+    test_fullstack_project
+
+    # Print test summary
+    log_section "Test Summary"
+    echo "Total tests: $TESTS_TOTAL"
+    echo "Passed: $TESTS_PASSED"
+    echo "Failed: $TESTS_FAILED"
+
+    # Exit with failure if any tests failed
+    [[ $TESTS_FAILED -eq 0 ]] || exit 1
 }
+
+# Run tests
+main
