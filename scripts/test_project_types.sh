@@ -243,3 +243,9 @@ fi
 
 # Run tests
 main "$1"
+
+
+# Running the tests:
+# ./test_project_types.sh frontend  # Test only frontend
+# ./test_project_types.sh backend   # Test only backend
+# ./test_project_types.sh fullstack # Test only fullstack
