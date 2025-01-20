@@ -79,6 +79,24 @@ test_invalid_project_names() {
 }
 
 # Test directory conflicts
+# TODO: clarify
 test_directory_conflicts() {
+    log_section "Testing directory conflicts"
+    cd "$TEST_DIR"
+
+    # Create a directory that will conflict
+    local project_name="test-conflict"
+    mkdir -p "$project_name"
+
+    # Test creating project with existing directory
+    run_test "Existing directory conflict" \
+        "${SCRIPT_DIR}/create_project.sh -t frontend -n $project_name" 1
+
+    # Clean up
+    rm -rf "$project_name"
+}
+
+# Test rollback functionality
+test_rollback() {
     
 }
