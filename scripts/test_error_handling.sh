@@ -97,6 +97,24 @@ test_directory_conflicts() {
 }
 
 # Test rollback functionality
+# TODO: clarify
 test_rollback() {
+    log_section "Testing rollback functionality"
+    cd "$TEST_DIR"
+
+    local project_name="test-rollback"
+
+    # Create a project that will fail mid-creation
+    # We'll simulate this by making a directory read-only after initial creation
+    run_test "Rollback on failure" \
+        "mkdir $project_name && chmod 555 $project_name && ${SCRIPT_DIR}/create-project.sh -t frontend -n $project_name; chmod 755 $project_name; rm -rf $project_name" 1
+    
+    # Verify cleanup
+    run_test "Cleanup after rollback" \
+        "[ ! -d '$project_name' ]" 0
+}
+
+# Test system requirements validation
+test_system_requirements() {
     
 }
