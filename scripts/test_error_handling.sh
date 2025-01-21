@@ -154,14 +154,21 @@ cleanup() {
 
 # Run tests based on project type
 main() {
-    
+
 }
 
 # Check command line argument
 
+
 # Run tests
 
 
+# TODO:
 # Main thing to clarify - How does this script actually end up testing the error handling?
 # Is it based on seeing how these simulated errors are handled by the scripts? 
 # Would this be reflected in the terminal?
+
+# Usage:
+# ./test_error_handling.sh frontend  # Test frontend error handling
+# ./test_error_handling.sh backend   # Test backend error handling
+# ./test_error_handling.sh fullstack # Test fullstack error handling
