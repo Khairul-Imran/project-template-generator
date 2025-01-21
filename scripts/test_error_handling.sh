@@ -115,6 +115,53 @@ test_rollback() {
 }
 
 # Test system requirements validation
+# TODO: clarify
 test_system_requirements() {
+    log_section "Testing system requirements validation"
+
+    # Test with invalid Node.js version (simulated)
+    run_test "Invalid Node.js version" \
+        "REQUIRED_NODE_VERSION='999.0.0' ${SCRIPT_DIR}/create_project.sh -t frontend -n test-project" 1
+
+    # Test with invalid Java version (simulated)
+    run_test "Invalid Java version" \
+        "REQUIRED_JAVA_VERSION='999' ${SCRIPT_DIR}/create_project.sh -t backend -n test-project" 1
+}
+
+# Test file operation errors
+test_file_operations() {
+    log_section "Testing file operation errors"
+    cd "$TEST_DIR"
+
+    local project_name="test-file-ops"
+    mkdir -p "$project_name"
+
+    # Test write permission error
+    chmod 555 "$project_name"
+    run_test "Write permission error" \
+        "${SCRIPT_DIR}/create_project.sh -t frontend -n $project_name" 1
+
+    # Clean up
+    chmod 755 "$project_name"
+    rm -rf "$project_name"
+}
+
+# Cleanup function
+cleanup() {
+    log_verbose "Cleaning up test directory..."
+    rm -rf "$TEST_DIR"
+}
+
+# Run tests based on project type
+main() {
     
 }
+
+# Check command line argument
+
+# Run tests
+
+
+# Main thing to clarify - How does this script actually end up testing the error handling?
+# Is it based on seeing how these simulated errors are handled by the scripts? 
+# Would this be reflected in the terminal?
