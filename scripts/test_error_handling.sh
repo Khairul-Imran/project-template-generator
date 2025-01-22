@@ -154,7 +154,52 @@ cleanup() {
 
 # Run tests based on project type
 main() {
+    local test_type="$1"
+    log_section "Starting error handling tests for: $test_type"
 
+    # Set up trap for cleanup
+    trap cleanup EXIT
+
+    # Common tests for all project types
+    test_invalid_arguments
+    test_invalid_project_names
+    test_directory_conflicts
+    test_rollback
+    test_file_operations
+
+    # Project-specific tests
+    case "$test_type" in
+        "frontend")
+            # Frontend-specific error tests
+            run_test "Frontend without Node.js" \
+                "NODE_PATH=/invalid ${SCRIPT_DIR}/create_project.sh -t frontend -n test-project" 1
+            ;;
+        "backend")
+            # Backend-specific error tests
+            run_test "Backend without Java" \
+                "JAVA_HOME=/invalid ${SCRIPT_DIR}/create_project.sh -t backend -n test-project" 1
+            ;;
+        "fullstack")
+            # Fullstack-specific error tests
+            run_test "Fullstack without Node.js" \
+                "NODE_PATH=/invalid ${SCRIPT_DIR}/create_project.sh -t fullstack -n test-project" 1
+            run_test "Fullstack without Java" \
+                "JAVA_HOME=/invalid ${SCRIPT_DIR}/create_project.sh -t fullstack -n test-project" 1
+            ;;
+        *)
+            log_error "Invalid test type. Must be one of: frontend, backend, fullstack"
+            exit 1
+            ;;
+    esac
+
+    # Print test summary
+    log_section "Test Summary"
+    echo "Total tests: $TESTS_TOTAL"
+    echo "Passed: $TESTS_PASSED"
+    echo "Failed: $TESTS_FAILED"
+
+    # Exit with failure if any tests failed
+    [[ $TESTS_FAILED -eq 0 ]] || exit 1
 }
 
 # Check command line argument
