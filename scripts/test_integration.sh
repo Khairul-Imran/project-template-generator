@@ -41,10 +41,40 @@ run_test() {
 }
 
 # Test validation and git integration
+test_validation_git_integration() {
+    log_section "Testing validation and git integration"
+    cd "$TEST_DIR"
 
+    local project_name="test-validation-git"
+
+    # Create project
+    run_test "Project creation with git setup" \
+        "${SCRIPT_DIR}/create_project.sh -t frontend -n $project_name" 0
+
+    # Verify git setup
+    run_test "Git repository initialisation" \
+        "[ -d '$project_name/.git' ]" 0
+
+    run_test "Git hooks setup" \
+        "[ -x '$project_name/.git/hooks/pre-commit' ]" 0
+
+    # Test git hooks functionality
+    # To clarify this part
+    cd "$project_name"
+    echo "API_KEY=secret123" > .env
+
+    run_test "Git hooks blocks sensitive file" \
+        "git add .env && git commit -m 'test commit'" 1
+
+    # Clean up
+    cd "$TEST_DIR"
+    rm -rf "$project_name"
+}
 
 # Test template and file utils integration
-
+test_template_file_integration() {
+    
+}
 
 # Test validation and template integration
 
