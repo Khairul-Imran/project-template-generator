@@ -203,9 +203,14 @@ main() {
 }
 
 # Check command line argument
-
+if [[ $# -ne 1 ]]; then
+    echo "Usage: $0 <project-type>"
+    echo "project-type: frontend, backend, or fullstack"
+    exit 1
+fi
 
 # Run tests
+main "$1"
 
 
 # TODO:
