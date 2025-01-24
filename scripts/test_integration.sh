@@ -73,7 +73,30 @@ test_validation_git_integration() {
 
 # Test template and file utils integration
 test_template_file_integration() {
-    
+    log_section "Testing template and file utils integration"
+    cd "$TEST_DIR"
+
+    local project_name="test-template-file"
+
+    # Create project
+    run_test "Project creation with template setup" \
+        "${SCRIPT_DIR}/create_project.sh -t frontend -n $project_name" 0
+
+    # Verify file structure
+    run_test "Documentation creation" \
+        "[ -f '$project_name/README.md' ] && [ -f '$project_name/docs/CONTRIBUTING.md' ]" 0
+
+    # Verify template setup
+    local frontend_dir="${project_name}/${project_name}-frontend"
+    run_test "Frontend template setup" \
+        "[ -f '$frontend_dir/package.json' ] && [ -f '$frontend_dir/tsconfig.json' ]" 0
+
+    # Verify template customization
+    run_test "Template customization" \
+        "grep -q '$project_name' '$frontend_dir/README.md'" 0
+
+    # Clean up
+    rm -rf "$project_name"
 }
 
 # Test validation and template integration
