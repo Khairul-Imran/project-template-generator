@@ -100,13 +100,71 @@ test_template_file_integration() {
 }
 
 # Test validation and template integration
+test_validation_template_integration() {
+    log_section "Testing validation and template integration"
+    cd "$TEST_DIR"
 
+    # Test with invalid project name but valid template
+    run_test "Invalid name with valid template" \
+        "${SCRIPT_DIR}/create_project.sh -t frontend -n 'invalid name'" 1
+
+    # Test with valid project name but simulated missing dependencies
+    if command -v node &> /dev/null; then
+        local original_path="$PATH"
+        PATH="/bin:/usr/bin"  # Temporarily remove node from PATH (TODO: double check this)
+        run_test "Valid name with missing dependencies" \
+            "${SCRIPT_DIR}/create_project.sh -t frontend -n valid-name" 1
+        PATH="$original_path"  # Restore PATH
+    fi
+}
 
 # Test file utils and git integration
+test_file_git_integration() {
+    log_section "Testing file utils and git integration"
+    cd "$TEST_DIR"
 
+    local project_name="test-file-git"
+
+    # Create project
+    run_test "Project creation" \
+        "${SCRIPT_DIR}/create_project.sh -t frontend -n $project_name" 0
+    
+    cd "$project_name"
+
+    # Verify gitignore rules with file creation
+    touch .env
+    touch .DS_Store
+
+    run_test "Gitignore functionality" \
+        "! git status --porcelain | grep -E '\.(env|DS_Store)'" 0 # TODO: clarify
+    
+    # Clean up
+    cd "$TEST_DIR"
+    rm -rf "$project_name"
+}
 
 # Comprehensive integration test
+test_all_components() {
+    log_section "Testing all components together"
+    cd "$TEST_DIR"
 
+    local project_name="test-integration"
+
+    # Create fullstack project (tests all components)
+    run_test "Fullstack project creation" \
+        "${SCRIPT_DIR}/create_project.sh -t fullstack -n $project_name" 0
+    
+    # Verify complete project setup
+    run_test "Complete project structure" \
+        "[ -d '$project_name' ] && \
+        [ -d '$project_name/.git' ] && \
+        [ -d '$project_name/${project_name}-frontend' ] && \
+        [ -d '$project_name/${project_name}-backend' ] && \
+        [ -f '$project_name/README.md' ]" 0
+    
+    # Clean up
+    rm -rf "$project_name"
+}
 
 # Cleanup function
 
