@@ -167,15 +167,64 @@ test_all_components() {
 }
 
 # Cleanup function
-
+cleanup() {
+    log_verbose "Cleaning up test directory..."
+    rm -rf "$TEST_DIR"
+}
 
 # Run integration test based on project type
 main() {
+    local test_type="$1"
+    log_section "Starting integration tests for: $test_type"
 
+    # Set up trap for cleanup
+    trap cleanup EXIT
+
+    # Common integration tests
+    test_validation_git_integration
+    test_file_git_integration
+
+    # Project-specific integration tests
+    case "$test_type" in
+        "frontend")
+            test_template_file_integration
+            test_validation_template_integration
+            ;;
+        "backend")
+            test_template_file_integration
+            test_validation_template_integration
+            ;;
+        "fullstack")
+            test_all_components
+            ;;
+        *)
+            log_error "Invalid test type. Must be one of: frontend, backend, fullstack"
+            exit 1
+            ;;
+    esac
+
+    # Print test summary
+    log_section "Test Summary"
+    echo "Total tests: $TESTS_TOTAL"
+    echo "Passed: $TESTS_PASSED"
+    echo "Failed: $TESTS_FAILED"
+
+    # Exit with failure if any tests failed
+    [[ $TESTS_FAILED -eq 0 ]] || exit 1
 }
 
 # Check command line argument
-
+if [[ $# -ne 1 ]]; then
+    echo "Usage: $0 <project-type>"
+    echo "project-type: frontend, backend, or fullstack"
+    exit 1
+fi
 
 # Run tests
+main "$1"
 
+
+# Usage:
+# ./test_integration.sh frontend  # Test frontend integration
+# ./test_integration.sh backend   # Test backend integration
+# ./test_integration.sh fullstack # Test complete system integration
