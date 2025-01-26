@@ -45,10 +45,11 @@ run_test() {
 verify_directory_structure() {
     local project_dir="$1"
     local project_type="$2"
+    local is_nested="${3:-false}"  # NEW - Added parameter to track nesting. Default is false.
     local error=0
 
     # Common directories that should exist in all projects
-    local commond_dirs=(
+    local common_dirs=(
         "docs"
         ".git"
     )
@@ -60,24 +61,26 @@ verify_directory_structure() {
         "docs/CONTRIBUTING.md"
     )
 
-    # Check common directories
-    for dir in "${common_dirs[@]}"; do
-        if [[ ! -d "$project_dir/$dir" ]]; then
-            log_error "Missing directory: $dir"
-            error=1
-        fi
-    done
+    # Skips common checks if this is a nested verification
+    if [[ "$is_nested" == "false" ]]; then
+        # Check common directories
+        for dir in "${common_dirs[@]}"; do
+            if [[ ! -d "$project_dir/$dir" ]]; then
+                log_error "Missing directory: $dir"
+                error=1
+            fi
+        done
 
-    # Check common files
-    for file in "${common_files[@]}"; do
-        if [[ ! -f "$project_dir/$file" ]]; then
-            log_error "Missing file: $file"
-            error=1
-        fi
-    done
+        # Check common files
+        for file in "${common_files[@]}"; do
+            if [[ ! -f "$project_dir/$file" ]]; then
+                log_error "Missing file: $file"
+                error=1
+            fi
+        done
+    fi
 
     # Project-specific checks
-    # TODO
     case "$project_type" in
         "frontend")
             local frontend_dir="$project_dir/${project_dir}-frontend"
@@ -129,8 +132,15 @@ verify_directory_structure() {
 
         "fullstack")
             # Check both frontend and backend
-            verify_directory_structure "$project_dir" "frontend"
-            verify_directory_structure "$project_dir" "backend"
+            local frontend_error=0
+            local backend_error=0
+
+            verify_directory_structure "$project_dir" "frontend" "true" || frontend_error=1
+            verify_directory_structure "$project_dir" "backend" "true" || backend_error=1
+
+            if [[ $frontend_error -eq 1 ]] || [[ $backend_error -eq 1 ]]; then
+                error=1
+            fi
             ;;
     esac
 

@@ -111,7 +111,8 @@ test_validation_template_integration() {
     # Test with valid project name but simulated missing dependencies
     if command -v node &> /dev/null; then
         local original_path="$PATH"
-        PATH="/bin:/usr/bin"  # Temporarily remove node from PATH (TODO: double check this)
+        # PATH="/bin:/usr/bin"  # Temporarily remove node from PATH
+        PATH="/bin:/usr/bin:/usr/local/bin"  # More explicit PATH setting (TODO: Double check)
         run_test "Valid name with missing dependencies" \
             "${SCRIPT_DIR}/create_project.sh -t frontend -n valid-name" 1
         PATH="$original_path"  # Restore PATH
@@ -132,11 +133,42 @@ test_file_git_integration() {
     cd "$project_name"
 
     # Verify gitignore rules with file creation
-    touch .env
-    touch .DS_Store
+    # touch .env
+    # touch .DS_Store
 
+    # NEW
+    # Create and verify test files
+    echo "test-content" > .env
+    echo "test-content" > .DS_Store
+
+    # Verify files were created
+    if [[ ! -f ".env" ]] || [[ ! -f ".DS_Store" ]]; then
+        log_error "Failed to create test files"
+        cd "$TEST_DIR"
+        rm -rf "$project_name"
+        return 1
+    fi
+
+    # Initialize git if not already initialized
+    if [[ ! -d ".git" ]]; then
+        git init > /dev/null 2>&1
+    fi
+
+    # Original
+    # The ! at the start negates the command
+    # Returns 0 (success) if the files are NOT found (meaning they're properly ignored)
+    # Returns 1 (failure) if the files ARE found
+    # run_test "Gitignore functionality" \
+    #     "! git status --porcelain | grep -E '\.(env|DS_Store)'" 0
+
+    # Recommendation
+    # Runs grep and redirects output to /dev/null
+    # $? captures grep's exit status
+    # [ $? -eq 1 ] checks if grep failed to find anything (which is what we want - files should be ignored)
+    # Returns 0 (success) if the check passes (files are ignored)
+    # This is more explicit about checking the return value
     run_test "Gitignore functionality" \
-        "! git status --porcelain | grep -E '\.(env|DS_Store)'" 0 # TODO: clarify
+        "git status --porcelain | grep -E '\.(env|DS_Store)' > /dev/null; [ $? -eq 1 ]" 0
     
     # Clean up
     cd "$TEST_DIR"

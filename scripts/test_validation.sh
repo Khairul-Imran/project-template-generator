@@ -134,7 +134,17 @@ test_backup_rollback() {
 
     # Create test directory
     local test_dir="test-project"
+
+    # Ensure clean state
+    if [[ -d "$test_dir" ]] || [[ -d "${test_dir}.bak" ]]; then
+        rm -rf "$test_dir" "${test_dir}.bak"
+    fi
+
     mkdir -p "$test_dir"
+    if [[ ! -d "$test_dir" ]]; then
+        log_error "Failed to create test directory"
+        return 1
+    fi
 
     # Test backup creation
     run_test "Backup creation" \
@@ -148,20 +158,26 @@ test_backup_rollback() {
     run_test "Rollback functionality" \
         "rollback '$test_dir'" 0
 
-    # Clean up
+    # Clean up with verification
     # Double-check variables aren't empty
     if [[ -n "$test_dir" ]]; then
 
         # Add check if directories exist before listing/removing
         if [[ -d "$test_dir" ]]; then
-            echo "Contents of test directory before cleanup:"
+            log_verbose "Contents of test directory before cleanup:"
             ls -la "$test_dir"
         fi
 
-        echo "Performing cleanup..."
-        # Only redirects stderr to /dev/null, stdout would still show if there was any
-        rm -rfv "${test_dir}" "${test_dir}.bak" 2>/dev/null || true
-        echo "Cleanup completed"
+        log_verbose "Performing cleanup..."
+        rm -rf "${test_dir}" "${test_dir}.bak"
+
+        # Verify cleanup
+        if [[ -d "$test_dir" ]] || [[ -d "${test_dir}.bak" ]]; then
+            log_error "Cleanup failed - directories still exist"
+            return 1
+        fi
+        
+        log_verbose "Cleanup completed successfully"
     fi
 }
 
