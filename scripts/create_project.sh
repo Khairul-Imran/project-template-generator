@@ -128,6 +128,8 @@ validate_arguments() {
 }
 
 # Dry run
+# Example usage:
+# ./create_project.sh --type fullstack --name my-app --dry-run
 show_preview() {
     local project_type="$1"
     local project_name="$2"
@@ -320,7 +322,7 @@ create_project
 # To ensure the code is cleaner (still considering for this)
 
 # create_project.sh
-# - Work on the CONFIG_FILE (next step)
+# - Work on the CONFIG_FILE (Leaving it as is for now. Just work with the current stacks you know currently.)
 
 
 # Next steps
@@ -334,16 +336,14 @@ create_project
 # 2. **Adding Validation and Safety Features**: (Done)
 
 # 3. **Improve User Experience**: (Done)
-#    - Add a dry-run mode to show what would be created (`--dry-run`) - To review the preview, to ensure it is representative of what is going to be created
-#    - Example usage:
-#    - ./create_project.sh --type fullstack --name my-app --dry-run
+#    - TODO: To review the preview for the dry-run, to ensure it is representative of what is going to be created
 
 # 4. **Documentation**:
 #    - Create a detailed README for the project generator itself
 #    - Add inline documentation to the scripts
 #    - Create usage examples
 
-# 5. **Additional Features**:
+# 5. **Additional Features**: (FUTURE IDEAS)
 #    - Add Docker setup for projects
 #    - Add GitHub Actions/CI setup
 #    - Add common testing frameworks setup
