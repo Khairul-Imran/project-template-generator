@@ -22,7 +22,7 @@ PROJECT_TYPE=""
 PROJECT_NAME=""
 VERBOSE=0
 SECONDS=0
-CONFIG_FILE="${SCRIPT_DIR}/config/default_config.yaml" # Config files to be worked on soon
+CONFIG_FILE="${SCRIPT_DIR}/config/default_config.yaml" # Config files to be worked on next time
 DRY_RUN=0
 
 # Print usage information
@@ -348,3 +348,18 @@ create_project
 #    - Add GitHub Actions/CI setup
 #    - Add common testing frameworks setup
 #    - Add database configuration options
+
+
+# To review: 
+# - create_project.sh (Mostly done, just need to double check the dry-run sample)
+
+# - logger_utils.sh (Done)
+# - file_utils.sh
+# - template_utils.sh
+# - git_utils.sh
+# - validation_utils.sh
+
+# - test_project_types.sh
+# - test_validation.sh
+# - test_error_handling.sh
+# - test_integration.sh

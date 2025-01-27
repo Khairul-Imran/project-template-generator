@@ -57,6 +57,7 @@ start_spinner() {
             # (i + 1) % length    - increment i and wrap around using modulo
         done
     ) &
+    # '()' creates a subshell, and runs the code inside it in a separate process
     # & - Runs the subshell '()' in the background
     # Allows the main script to continue while the spinner runs
 
