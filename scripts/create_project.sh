@@ -10,8 +10,8 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 # Source utility functions
 source "${SCRIPT_DIR}/lib/logger_utils.sh"
 source "${SCRIPT_DIR}/lib/git_utils.sh"
-source "${SCRIPT_DIR}/lib/file_utils.sh"
-source "${SCRIPT_DIR}/lib/template_utils.sh"
+source "${SCRIPT_DIR}/lib/file_utils.sh"        # For creating the directory structure and documentation
+source "${SCRIPT_DIR}/lib/template_utils.sh"    # For setting up the project's template (all the necessary files etc.)
 source "${SCRIPT_DIR}/lib/validation_utils.sh"
 
 # Default values
@@ -354,9 +354,9 @@ create_project
 # - create_project.sh (Mostly done, just need to double check the dry-run sample)
 
 # - logger_utils.sh (Done)
-# - file_utils.sh
-# - template_utils.sh
-# - git_utils.sh
+# - file_utils.sh (Done)
+# - template_utils.sh (Done)
+# - git_utils.sh 
 # - validation_utils.sh
 
 # - test_project_types.sh

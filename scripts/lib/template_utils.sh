@@ -73,7 +73,7 @@ create_backend_readme() {
 # ${project_name^} Backend
 
 ## Tech Stack
-- Java 17
+- Java
 - Spring Boot
 - Spring Data JPA
 - Spring Security
@@ -144,7 +144,6 @@ setup_frontend_project() {
         log_error "Failed to create Vite project"
         exit 1
     fi
-
 
     # Navigate to frontend directory
     # cd "$frontend_dir"
