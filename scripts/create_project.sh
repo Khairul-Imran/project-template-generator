@@ -9,10 +9,10 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 # Source utility functions
 source "${SCRIPT_DIR}/lib/logger_utils.sh"
-source "${SCRIPT_DIR}/lib/git_utils.sh"
+source "${SCRIPT_DIR}/lib/git_utils.sh"         # For setting up git repository (with the git hooks)
 source "${SCRIPT_DIR}/lib/file_utils.sh"        # For creating the directory structure and documentation
 source "${SCRIPT_DIR}/lib/template_utils.sh"    # For setting up the project's template (all the necessary files etc.)
-source "${SCRIPT_DIR}/lib/validation_utils.sh"
+source "${SCRIPT_DIR}/lib/validation_utils.sh"  # For validating the various requirements for projects (node, java, maven versions, naming, backup, rollback)
 
 # Default values
 PROJECT_TYPE=""
@@ -356,8 +356,8 @@ create_project
 # - logger_utils.sh (Done)
 # - file_utils.sh (Done)
 # - template_utils.sh (Done)
-# - git_utils.sh 
-# - validation_utils.sh
+# - git_utils.sh (Done)
+# - validation_utils.sh (Done - Need to choose the required versions we want to use) ****
 
 # - test_project_types.sh
 # - test_validation.sh

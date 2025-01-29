@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Required versions
-# To decide on the versions later *****
+# TODO: To decide on the versions later *****
 readonly REQUIRED_NODE_VERSION=""
 readonly REQUIRED_JAVA_VERSION=""
 readonly REQUIRED_MVN_VERSION=""
@@ -75,7 +75,6 @@ validate_maven() {
     return 0
 }
 
-
 # Helper function to compare versions
 verify_version() {
     local current=$1
@@ -94,7 +93,6 @@ verify_version() {
     done
     return 0
 }
-
 
 # Validate project name
 validate_project_name() {
