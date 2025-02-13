@@ -357,7 +357,7 @@ create_project
 # - file_utils.sh (Done)
 # - template_utils.sh (Done)
 # - git_utils.sh (Done)
-# - validation_utils.sh (Done - Need to choose the required versions we want to use) ****
+# - validation_utils.sh (Done)
 
 # - test_project_types.sh
 # - test_validation.sh

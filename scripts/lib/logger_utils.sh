@@ -1,6 +1,6 @@
 #!/bin/bash
 
-declare -g SPINNER_PID  # Declare it as a global variable
+SPINNER_PID=""  # Changed - Initialize as empty string
 
 # Set strict error handling
 set -euo pipefail
@@ -106,7 +106,8 @@ show_progress() {
 # Removing, as it is set in create_project
 
 log_verbose() {
-    if [[ $VERBOSE -eq 1 ]]; then
+    # Check if VERBOSE is set, default to 0 if not
+    if [[ "${VERBOSE:-0}" -eq 1 ]]; then
         echo -e "${BLUE}verbose${NC} $1"
     fi
 }

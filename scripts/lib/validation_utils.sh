@@ -5,9 +5,9 @@ set -euo pipefail
 
 # Required versions
 # TODO: To decide on the versions later *****
-readonly REQUIRED_NODE_VERSION=""
-readonly REQUIRED_JAVA_VERSION=""
-readonly REQUIRED_MVN_VERSION=""
+readonly REQUIRED_NODE_VERSION="v21.6.1"
+readonly REQUIRED_JAVA_VERSION="23.0.2"
+readonly REQUIRED_MVN_VERSION="3.9.9"
 
 # Validate Node.js version
 validate_node() {
