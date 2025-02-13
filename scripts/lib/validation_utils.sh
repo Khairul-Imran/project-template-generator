@@ -80,6 +80,10 @@ verify_version() {
     local current=$1
     local required=$2
 
+    # Removes the 'v' prefix if present
+    current=${current#v}
+    required=${required#v}
+
     # Clarify
     local current_parts=(${current//./ })
     local required_parts=(${required//./ })
@@ -119,7 +123,8 @@ validate_project_name() {
     # Check for  reserved names
     local reserved_names=("node_modules" "build" "dist" "test" "src" "app" "config" "public")
     for reserved in "${reserved_names[@]}"; do
-        if [[ "${project_name,,}" == "$reserved" ]]; then
+        # if [[ "${project_name,,}" == "$reserved" ]]; then
+        if [[ "$(echo "$project_name" | tr '[:upper:]' '[:lower:]')" == "$reserved" ]]; then
             log_error "Project name cannot be a reserved name: $reserved"
             error=1
         fi

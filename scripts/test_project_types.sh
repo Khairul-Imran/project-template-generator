@@ -4,10 +4,7 @@
 set -euo pipefail
 
 # Script location
-# SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Changed, as our directory path had a space (e.g. Proper Projects)
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEST_DIR="$(mktemp -d)"
 
 # Source required files
@@ -158,12 +155,8 @@ test_frontend_project() {
     cd "$TEST_DIR"
 
     # Create frontend project
-    # run_test "Frontend project creation" \
-    #     "${SCRIPT_DIR}/create_project.sh -t frontend -n $project_name" 0
-    
-    # Changed, for the issue with our project directory name (Proper Projects)
     run_test "Frontend project creation" \
-        "\"${SCRIPT_DIR}/create_project.sh\" -t frontend -n $project_name" 0
+        "${SCRIPT_DIR}/create_project.sh -t frontend -n $project_name" 0
 
     # Verify structure
     run_test "Frontend project structure" \
