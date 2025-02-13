@@ -128,6 +128,7 @@ EOF
 setup_frontend_project() {
     local project_name="$1"
     local frontend_dir="${project_name}-frontend"
+    local current_dir="$(pwd)"  # NEW - Save current directory
 
     log_section "Setting up frontend project with Vite + React + Typescript + Tailwind..."
 
@@ -147,7 +148,14 @@ setup_frontend_project() {
 
     # Navigate to frontend directory
     # cd "$frontend_dir"
-    cd "$frontend-dir" || {
+    # cd "$frontend_dir" || {
+    #     log_error "Failed to navigate to frontend directory"
+    #     exit 1
+    # }
+
+    # NEW
+    # Navigate to frontend directory using full path
+    cd "$current_dir/$frontend_dir" || {
         log_error "Failed to navigate to frontend directory"
         exit 1
     }
@@ -172,8 +180,14 @@ setup_frontend_project() {
 
     # Initialise Tailwind CSS
     log_info "Initialising Tailwind CSS.."
-    # npx tailwindcss init -p
+
+    # Testing
+    # npm ls tailwindcss
+
+    # STOPPED HERE
     if ! npx tailwindcss init -p; then
+    # if ! npx --yes tailwindcss init -p; then  # Added --yes flag
+    # if ! (cd "${frontend_dir}" && npx tailwindcss init -p); then
         log_error "Failed to initialise Tailwind CSS"
         exit 1
     fi

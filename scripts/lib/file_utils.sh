@@ -23,50 +23,63 @@ create_documentation() {
     log_info "Creating documentation files..."
     log_verbose "Generating README.md..."
 
+    # Create project title with first letter capitalized
+    project_title=$(echo "$project_name" | tr '[:lower:]' '[:upper:]' | sed 's/\(.\)\(.*\)/\1\L\2/')
+
+    # Pre-generate content based on project type
+    local project_structure=""
+    local prerequisites=""
+    local installation=""
+    local development=""
+    local project_files=""
+    local available_commands=""
+    local contributing_guidelines=""
+
+    # Set content based on project type
+    case "$project_type" in
+        "frontend")
+            project_structure="- \`${project_name}-frontend/\` - Frontend application (React + TypeScript)\n  - See frontend README for specific setup and development instructions"
+            prerequisites="- Node.js (LTS version recommended)\n- npm"
+            installation="2. Install dependencies\n\`\`\`bash\nnpm install\n\`\`\`"
+            development="Run the development server:\n\`\`\`bash\nnpm run dev\n\`\`\`"
+            project_files="- \`src/\` - Source files\n- \`public/\` - Static assets\n- \`docs/\` - Documentation\n- \`scripts/\` - Utility scripts"
+            available_commands="- \`npm run dev\` - Start development server\n- \`npm run build\` - Build for production\n- \`npm run test\` - Run tests"
+            contributing_guidelines="- Follow the existing code style\n- Write meaningful commit messages\n- Update documentation as needed\n- Add appropriate tests"
+            ;;
+        "backend")
+            project_structure="- \`${project_name}-backend/\` - Backend application (Spring Boot)\n  - See backend README for specific setup and development instructions"
+            prerequisites="- Java 17 or higher\n- Maven"
+            installation="2. Build the project\n\`\`\`bash\n./mvnw clean install\n\`\`\`"
+            development="Run the application:\n\`\`\`bash\n./mvnw spring-boot:run\n\`\`\`"
+            project_files="- \`src/\` - Source files\n- \`config/\` - Configuration files\n- \`docs/\` - Documentation\n- \`scripts/\` - Utility scripts"
+            available_commands="- \`./mvnw spring-boot:run\` - Start the application\n- \`./mvnw test\` - Run tests\n- \`./mvnw package\` - Create production build"
+            contributing_guidelines="- Follow Java coding conventions\n- Write meaningful commit messages\n- Include appropriate unit tests\n- Update documentation as needed"
+            ;;
+        "fullstack")
+            project_structure="- \`${project_name}-frontend/\` - Frontend application (React + TypeScript)\n  - See frontend README for specific setup and development instructions\n- \`${project_name}-backend/\` - Backend application (Spring Boot)\n  - See backend README for specific setup and development instructions"
+            prerequisites="- Node.js (LTS version recommended)\n- npm\n- Java 17 or higher\n- Maven"
+            installation="2. Install and build projects\n\`\`\`bash\n# Frontend\ncd frontend\nnpm install\n\n# Backend\ncd ../backend\n./mvnw clean install\n\`\`\`"
+            development="1. Start the backend server:\n\`\`\`bash\ncd backend\n./mvnw spring-boot:run\n\`\`\`\n\n2. In a new terminal, start the frontend development server:\n\`\`\`bash\ncd frontend\nnpm run dev\n\`\`\`"
+            project_files="- \`frontend/\` - Frontend application\n- \`backend/\` - Backend application\n- \`docs/\` - Documentation\n- \`scripts/\` - Utility scripts\n- \`config/\` - Configuration files"
+            available_commands="Frontend:\n- \`npm run dev\` - Start development server\n- \`npm run build\` - Build for production\n- \`npm run test\` - Run tests\n\nBackend:\n- \`./mvnw spring-boot:run\` - Start the application\n- \`./mvnw test\` - Run tests\n- \`./mvnw package\` - Create production build"
+            contributing_guidelines="### Frontend\n- Follow the existing code style\n- Write meaningful commit messages\n- Update documentation as needed\n- Add appropriate tests\n\n### Backend\n- Follow Java coding conventions\n- Write meaningful commit messages\n- Include appropriate unit tests\n- Update documentation as needed"
+            ;;
+    esac
+
     # Create main README.md
     cat > "README.md" << EOF
-# ${project_name^}
+# $project_title
 
 ## Overview
-${project_name^} is a ${project_type} project.
+$project_title is a ${project_type} project.
 
 ## Project Structure
-$(case "$project_type" in
-    "frontend")
-        echo "- \`${project_name}-frontend/\` - Frontend application (React + TypeScript)
-  - See frontend README for specific setup and development instructions"
-        ;;
-    "backend")
-        echo "- \`${project_name}-backend/\` - Backend application (Spring Boot)
-  - See backend README for specific setup and development instructions"
-        ;;
-    "fullstack")
-        echo "- \`${project_name}-frontend/\` - Frontend application (React + TypeScript)
-  - See frontend README for specific setup and development instructions
-- \`${project_name}-backend/\` - Backend application (Spring Boot)
-  - See backend README for specific setup and development instructions"
-        ;;
-esac)
+$project_structure
 
 ## Getting Started
 
 ### Prerequisites
-$(case "$project_type" in
-    "frontend")
-        echo "- Node.js (LTS version recommended)
-- npm"
-        ;;
-    "backend")
-        echo "- Java 17 or higher
-- Maven"
-        ;;
-    "fullstack")
-        echo "- Node.js (LTS version recommended)
-- npm
-- Java 17 or higher
-- Maven"
-        ;;
-esac)
+$prerequisites
 
 ### Installation and setup
 1. Clone the repository
@@ -75,109 +88,16 @@ git clone <repository-url>
 cd ${project_name}
 \`\`\`
 
-$(case "$project_type" in
-    "frontend")
-        echo "2. Install dependencies
-\`\`\`bash
-npm install
-\`\`\`"
-        ;;
-    "backend")
-        echo "2. Build the project
-\`\`\`bash
-./mvnw clean install
-\`\`\`"
-        ;;
-    "fullstack")
-        echo "2. Install and build projects
-\`\`\`bash
-# Frontend
-cd frontend
-npm install
-
-# Backend
-cd ../backend
-./mvnw clean install
-\`\`\`"
-        ;;
-esac)
+$installation
 
 ### Development
-$(case "$project_type" in
-    "frontend")
-        echo "Run the development server:
-\`\`\`bash
-npm run dev
-\`\`\`"
-        ;;
-    "backend")
-        echo "Run the application:
-\`\`\`bash
-./mvnw spring-boot:run
-\`\`\`"
-        ;;
-    "fullstack")
-        echo "1. Start the backend server:
-\`\`\`bash
-cd backend
-./mvnw spring-boot:run
-\`\`\`
-
-2. In a new terminal, start the frontend development server:
-\`\`\`bash
-cd frontend
-npm run dev
-\`\`\`"
-        ;;
-esac)
+$development
 
 ## Project Structure
-$(case "$project_type" in
-    "frontend")
-        echo "- \`src/\` - Source files
-- \`public/\` - Static assets
-- \`docs/\` - Documentation
-- \`scripts/\` - Utility scripts"
-        ;;
-    "backend")
-        echo "- \`src/\` - Source files
-- \`config/\` - Configuration files
-- \`docs/\` - Documentation
-- \`scripts/\` - Utility scripts"
-        ;;
-    "fullstack")
-        echo "- \`frontend/\` - Frontend application
-- \`backend/\` - Backend application
-- \`docs/\` - Documentation
-- \`scripts/\` - Utility scripts
-- \`config/\` - Configuration files"
-        ;;
-esac)
+$project_files
 
 ## Available Commands
-$(case "$project_type" in
-    "frontend")
-        echo "- \`npm run dev\` - Start development server
-- \`npm run build\` - Build for production
-- \`npm run test\` - Run tests"
-        ;;
-    "backend")
-        echo "- \`./mvnw spring-boot:run\` - Start the application
-- \`./mvnw test\` - Run tests
-- \`./mvnw package\` - Create production build"
-        ;;
-    "fullstack")
-        echo "Frontend:
-- \`npm run dev\` - Start development server
-- \`npm run build\` - Build for production
-- \`npm run test\` - Run tests
-
-Backend:
-- \`./mvnw spring-boot:run\` - Start the application
-- \`./mvnw test\` - Run tests
-- \`./mvnw package\` - Create production build"
-        ;;
-esac)
+$available_commands
 
 ## Git Hooks
 This project includes a pre-commit hook that checks for sensitive data in your commits. This helps prevent accidental commits of sensitive information.
@@ -192,7 +112,7 @@ EOF
     # Create docs/CONTRIBUTING.md
     mkdir -p docs
     cat > "docs/CONTRIBUTING.md" << EOF
-# Contributing to ${project_name^}
+# Contributing to $project_title
 
 ## Getting started
 1. Fork the repository
@@ -202,33 +122,7 @@ EOF
 5. Open a Pull Request
 
 ## Development Guidelines
-$(case "$project_type" in
-    "frontend")
-        echo "- Follow the existing code style
-- Write meaningful commit messages
-- Update documentation as needed
-- Add appropriate tests"
-        ;;
-    "backend")
-        echo "- Follow Java coding conventions
-- Write meaningful commit messages
-- Include appropriate unit tests
-- Update documentation as needed"
-        ;;
-    "fullstack")
-        echo "### Frontend
-- Follow the existing code style
-- Write meaningful commit messages
-- Update documentation as needed
-- Add appropriate tests
-
-### Backend
-- Follow Java coding conventions
-- Write meaningful commit messages
-- Include appropriate unit tests
-- Update documentation as needed"
-        ;;
-esac)
+$contributing_guidelines
 EOF
 }
 

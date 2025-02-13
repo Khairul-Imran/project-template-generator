@@ -123,6 +123,8 @@ validate_project_name() {
     # Check for  reserved names
     local reserved_names=("node_modules" "build" "dist" "test" "src" "app" "config" "public")
     for reserved in "${reserved_names[@]}"; do
+        # ${parameter,,} isn't supported in our version of bash - to convert a string to lowercase
+        # So we use tr instead
         # if [[ "${project_name,,}" == "$reserved" ]]; then
         if [[ "$(echo "$project_name" | tr '[:upper:]' '[:lower:]')" == "$reserved" ]]; then
             log_error "Project name cannot be a reserved name: $reserved"

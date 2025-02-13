@@ -14,6 +14,17 @@ source "${SCRIPT_DIR}/lib/file_utils.sh"        # For creating the directory str
 source "${SCRIPT_DIR}/lib/template_utils.sh"    # For setting up the project's template (all the necessary files etc.)
 source "${SCRIPT_DIR}/lib/validation_utils.sh"  # For validating the various requirements for projects (node, java, maven versions, naming, backup, rollback)
 
+# Cleanup function
+cleanup () {
+    # Kill any running spinners
+    if [[ -n "$SPINNER_PID" ]]; then
+        kill $SPINNER_PID 2>/dev/null || true
+        tput cnorm # restore cursor
+    fi
+}
+
+trap cleanup EXIT
+
 # Default values
 PROJECT_TYPE=""
 # TEMPLATE="" -> not using for now

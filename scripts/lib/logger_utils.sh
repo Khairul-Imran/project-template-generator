@@ -56,7 +56,7 @@ start_spinner() {
             # ${#SPINNER_CHARS[@]} - length of SPINNER_CHARS array
             # (i + 1) % length    - increment i and wrap around using modulo
         done
-    ) &
+    ) > /dev/null 2>&1 & # Added the 2>/dev/null to suppress termination message (since there are no issues already)
     # '()' creates a subshell, and runs the code inside it in a separate process
     # & - Runs the subshell '()' in the background
     # Allows the main script to continue while the spinner runs
@@ -70,7 +70,12 @@ stop_spinner() {
     local success=$1
     
     # Kill spinner process
-    kill $SPINNER_PID 2>/dev/null
+    # kill $SPINNER_PID 2>/dev/null
+
+    # Kill spinner process if it exists
+    if [[ -n "$SPINNER_PID" ]]; then
+        { kill $SPINNER_PID; wait $SPINNER_PID; } 2>/dev/null || true
+    fi
     
     # Show cursor
     tput cnorm
