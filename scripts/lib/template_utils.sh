@@ -172,7 +172,7 @@ setup_frontend_project() {
     # Add Tailwind CSS and its dependencies
     start_spinner "Adding Tailwind CSS..."
     # npm install -D tailwindcss postcss autoprefixer
-    if ! npm install -D tailwindcss postcss autoprefixer; then
+    if ! npm install -D tailwindcss postcss autoprefixer --save-exact; then
         log_error "Failed to install Tailwind CSS and its dependencies"
         exit 1
     fi
@@ -181,11 +181,15 @@ setup_frontend_project() {
     # Initialise Tailwind CSS
     log_info "Initialising Tailwind CSS.."
 
-    # Testing
-    # npm ls tailwindcss
+    # Debugging
+    echo "Current working directory: $(pwd)"
+    echo "Directory contents after Tailwind install:"
+    ls -la node_modules/.bin/
+
 
     # STOPPED HERE
-    if ! npx tailwindcss init -p; then
+    if ! npx -y tailwindcss@latest init -p --yes; then # Still doesn't work - can't initialise
+    # if ! npx tailwindcss init -p; then
     # if ! npx --yes tailwindcss init -p; then  # Added --yes flag
     # if ! (cd "${frontend_dir}" && npx tailwindcss init -p); then
         log_error "Failed to initialise Tailwind CSS"
