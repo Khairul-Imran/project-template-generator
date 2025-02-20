@@ -6,7 +6,7 @@ set -euo pipefail
 # Required versions
 # TODO: To decide on the versions later *****
 readonly REQUIRED_NODE_VERSION="v21.6.1"
-readonly REQUIRED_JAVA_VERSION="23.0.2"
+readonly REQUIRED_JAVA_VERSION="23.0.2" # Need to double check this - probably needs to be the same as the one chosen with spring boot setup in template_utils
 readonly REQUIRED_MVN_VERSION="3.9.9"
 
 # Validate Node.js version

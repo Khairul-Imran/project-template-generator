@@ -171,8 +171,9 @@ setup_frontend_project() {
 
     # Add Tailwind CSS and its dependencies
     start_spinner "Adding Tailwind CSS..."
-    # npm install -D tailwindcss postcss autoprefixer
-    if ! npm install -D tailwindcss postcss autoprefixer --save-exact; then
+    # npm install -D tailwindcss postcss autoprefixer - OLD
+    # npm install tailwindcss @tailwindcss/vite - NEW
+    if ! npm install tailwindcss @tailwindcss/vite; then
         log_error "Failed to install Tailwind CSS and its dependencies"
         exit 1
     fi
@@ -186,10 +187,9 @@ setup_frontend_project() {
     echo "Directory contents after Tailwind install:"
     ls -la node_modules/.bin/
 
-
     # STOPPED HERE
-    if ! npx -y tailwindcss@latest init -p --yes; then # Still doesn't work - can't initialise
-    # if ! npx tailwindcss init -p; then
+    # if ! npx -y tailwindcss@latest init -p --yes; then
+    if ! npx tailwindcss init -p; then
     # if ! npx --yes tailwindcss init -p; then  # Added --yes flag
     # if ! (cd "${frontend_dir}" && npx tailwindcss init -p); then
         log_error "Failed to initialise Tailwind CSS"
@@ -333,8 +333,8 @@ setup_backend_project() {
 
     # Spring Boot project variables
     local boot_version="3.4.1" # Changed to 3.4.1
-    local java_version="21" # Changed to 21
-    local group_id="com.example"
+    local java_version="21" # Changed to 21 - Need to double check this - probably needs to be the same as the one chosen for validation_utils
+    local group_id="com.example" # Might change this to my domain name (reverse)
     local artifact_id="$backend_dir"
     local deps="web,data-jpa,security,validation,lombok,devtools"
 
